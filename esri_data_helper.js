@@ -28,7 +28,8 @@ EsriDataHelper.prototype.requestAddressInformation = function(address) {
 }
 
 EsriDataHelper.prototype.getAddressGeolocation = function(address) {
-  var uri = ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson';
+  var uri = ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '&City=&State=&ZIP=&SingleLine=&outFields=*&maxLocations=&outSR=4326&searchExtent=&f=pjson';
+  console.log(uri);
   var options = {
     method: 'GET',
     uri: encodeURI(uri),
@@ -146,10 +147,20 @@ EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
     nextTrash = helperClass.formatDate(Date.parse('next ' + trashDay));
   }
   var nextRecycle = helperClass.getRecycleDay(cycle, trashDay);
-  var prompt = _.template('Your next trash day is ${nextTrash} and your next recycle date is ${nextRecycle}')({
-    nextTrash: nextTrash,
-    nextRecycle: nextRecycle
-  })
+  var prompt = '';
+  console.log('The two days trash first');
+  console.log(nextTrash);
+  console.log(nextRecycle);
+  if(nextRecycle == nextTrash){
+    prompt = _.template('Your next trash and recycle day is ${nextTrash}')({
+      nextTrash: nextTrash
+    });
+  } else {
+    prompt = _.template('Your next trash day is ${nextTrash} and your recycle date is next week, ${nextRecycle}')({
+      nextTrash: nextTrash,
+      nextRecycle: nextRecycle
+    });
+  }
   return prompt;
 }
 

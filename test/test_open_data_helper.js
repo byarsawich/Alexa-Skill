@@ -296,7 +296,7 @@ describe('OpenDataHelper', function() {
         var open_gym_date = today.toISOString().substring(0,10);
         var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
         return subject.requestOpenData(uri).then(function(obj) {
-          return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.date_scanned).to.eq('2017-04-18');
+          return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.date_scanned).to.eq('2017-04-17');
         });
       });
     });
@@ -326,7 +326,7 @@ describe('OpenDataHelper', function() {
       ]
     };
     context('return call from open data', function() {
-      var responseText = 'There is 1 open studio times on Wed Apr 12 from 01:00:00 PM to 03:00:00 PM.'
+      var responseText = 'There is 1 open studio time on Wed Apr 12 from 01:00:00 PM to 03:00:00 PM.'
       it('formats the status as expected', function() {
         expect(subject.formatStudioTimes(response)).to.eq(responseText);
       });

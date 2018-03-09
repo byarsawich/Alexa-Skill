@@ -41,7 +41,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
       EndDate: endDate,
       Filter: null,
       PageIndex: '1',
-      PageSize: '8',
+      PageSize: '6',
       StartDate: startDate
    }
   };

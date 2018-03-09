@@ -650,6 +650,9 @@ TrashDayIntent	is my trash date this week
 TrashDayIntent	is my recycle date this week
 TrashDayIntent	is my garbage date this week
 TrashDayIntent  is recycling this week
+TrashDayIntent  Do I have recycling this week
+TrashDayIntent  Do I have recycling today
+TrashDayIntent  is today my recycling day
 
 FieldStatusIntent	what is the field status at {park}
 FieldStatusIntent	what is the status of {park}

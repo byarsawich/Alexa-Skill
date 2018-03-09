@@ -32,7 +32,8 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
 		console.log(results);
-    return conn.query("Select Id, CaseNumber, Status,LastModifiedDate, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
+		console.log("Select Id, CaseNumber, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
+    return conn.query("Select Id, CaseNumber, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
 		console.log(results);
     return results.records[0];
@@ -58,6 +59,8 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
 		console.log(q);
 		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, Case_Issue_Name__c from Case where " +  q + " order by createdDate DESC Limit 1");
 	}).then(function(results){
+			console.log(results);
+			console.log(results.records);
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -128,9 +131,11 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 	return getContactId(userToken).then(function(results){
 		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results +"'" );
 	}).then(function(results){
+		console.log(results);
 		if(results.records[0].MailingLatitude == null || results.records[0].MailingLongitude == null){
 			var esriDataHelper = new EsriDataHelper();
 			return esriDataHelper.requestAddressInformation(results.records[0].MailingStreet).then(function(response) {
+				console.log(response);
 				return {"x": response.candidates[0].location.x, "y": response.candidates[0].location.y};
 			}).catch(function(err){
 				console.log('Error in geocoding address');

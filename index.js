@@ -13,6 +13,8 @@ var ua = require('universal-analytics');
 var rp = require('request-promise');
 var RSSFeedHelper = require('./rss_feed_helper');
 require('./jsDate.js')();
+
+
 var facts = require('./cary_facts');
 var issues = require('./case_issues');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
@@ -31,7 +33,7 @@ var APP_STATES = {
   PARKS: '_PARKS',
   ART: '_ART',
   CASE: '_CASE',
-  TRASH: '_TRASH'
+  TRASH: '_TRASH',
 };
 
 var GOOGLE_STATE_IDS = {
@@ -40,7 +42,7 @@ var GOOGLE_STATE_IDS = {
   PARKS: 'UA-97014541-3',
   ART: 'UA-97014541-4',
   CASE: 'UA-97014541-5',
-  TRASH: 'UA-97014541-6'
+  TRASH: 'UA-97014541-6',
 };
 
 var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help. What can I help you with today?';
@@ -56,7 +58,6 @@ var GYMLOCATIONS = {'BOND PARK': 'BPCC', 'HERBERT YOUNG': 'HYCC', 'HERB YOUNG': 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
-
   alexa.registerHandlers(newSessionHandlers, councilHandlers, parkHandlers, artHandlers, caseHandlers, trashHandlers);
   alexa.execute();
 };
@@ -197,7 +198,7 @@ var newSessionHandlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       return openDataHelper.formatAllCouncilMembers(response);
+      return openDataHelper.formatAllCouncilMembers(response);
     }).then(function(response){
       intentTrackingID.event("AllCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
@@ -216,7 +217,7 @@ var newSessionHandlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       return openDataHelper.formatAtLargeCouncilMembers(response);
+      return openDataHelper.formatAtLargeCouncilMembers(response);
     }).then(function(response){
       intentTrackingID.event("AtLargeCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
@@ -235,7 +236,7 @@ var newSessionHandlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       return openDataHelper.formatMayor(response);
+      return openDataHelper.formatMayor(response);
     }).then(function(response){
       intentTrackingID.event("MyMayorIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
@@ -253,10 +254,10 @@ var newSessionHandlers = {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
-  		var speechOutput = "You must link your account before accessing this skill.";
+      var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStartIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		self.emit(':tellWithLinkAccountCard', speechOutput);
-  	} else {
+      self.emit(':tellWithLinkAccountCard', speechOutput);
+    } else {
       var prompt = "OK, let's create a new Case. What do you need help with?";
       var reprompt = 'For a list of options please say help.  What do you need help with?';
       intentTrackingID.event("CaseStartIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
@@ -272,10 +273,10 @@ var newSessionHandlers = {
     var helperClass = new HelperClass();
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
-  		var speechOutput = "You must link your account before accessing this skill.";
+      var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseConfirmationIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		self.emit(':tellWithLinkAccountCard', speechOutput);
-  	} else {
+      self.emit(':tellWithLinkAccountCard', speechOutput);
+    } else {
       intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       var caseSubject = self.event.request.intent.slots.caseSubject.value;
       var caseAction = self.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
@@ -295,10 +296,10 @@ var newSessionHandlers = {
     var self = this;
     var helperClass = new HelperClass();
     if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
-  		var speechOutput = "You must link your account before accessing this skill.";
+      var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("MyCaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		self.emit(':tellWithLinkAccountCard', speechOutput);
-  	} else {
+      self.emit(':tellWithLinkAccountCard', speechOutput);
+    } else {
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
       var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
@@ -323,10 +324,10 @@ var newSessionHandlers = {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
-  		var speechOutput = "You must link your account before accessing this skill.";
+      var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		self.emit(':tellWithLinkAccountCard', speechOutput);
-  	} else {
+      self.emit(':tellWithLinkAccountCard', speechOutput);
+    } else {
       var helperClass = new HelperClass();
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
@@ -456,15 +457,15 @@ var newSessionHandlers = {
   },
 
   'AMAZON.RepeatIntent': function () {
-      var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
-      intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-      this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
+    this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
   },
 
   'AMAZON.StopIntent': function () {
@@ -533,9 +534,9 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     });
   },
 
-  'AMAZON.YesIntnet': function() {
+  'AMAZON.YesIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your council information';
     this.emit(':ask', prompt, prompt);
   },
@@ -544,7 +545,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
-    this.emit(':tell', prompt);
+    this.emit(':tell', prompt)
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -595,7 +596,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
       var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
       return esriDataHelper.requestInformationByRadius(response.candidates[0].location.x, response.candidates[0].location.y, DISTANCE, uri);
     }).then(function(response){
-        return esriDataHelper.formatNearbyParks(response);
+      return esriDataHelper.formatNearbyParks(response);
     }).then(function(responseresponse) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
@@ -628,9 +629,9 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     });
   },
 
-  'AMAZON.YesIntnet': function() {
+  'AMAZON.YesIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby parks';
     this.emit(':ask', prompt, prompt);
   },
@@ -687,7 +688,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var address = street_number + ' ' + street
     var prompt = '';
     esriDataHelper.requestAddressInformation(address).then(function(response) {
-        var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
+      var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
       return esriDataHelper.requestESRIInformation(uri);
     }).then(function(response){
       return esriDataHelper.formatNearbyPublicArt(response);
@@ -722,9 +723,9 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     });
   },
 
-  'AMAZON.YesIntnet': function() {
+  'AMAZON.YesIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby public art';
     this.emit(':ask', prompt, prompt);
   },
@@ -885,7 +886,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     esriDataHelper.requestAddressInformation(address).then(function(response) {
-        var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+      var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
       return esriDataHelper.requestESRIInformation(uri);
     }).then(function(response){
       return esriDataHelper.formatMyTrashDay(response);
@@ -919,9 +920,9 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     });
   },
 
-  'AMAZON.YesIntnet': function() {
+  'AMAZON.YesIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your next trash and recycle day.';
     this.emit(':ask', prompt, prompt);
   },
@@ -967,22 +968,25 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 });
 
 function getUserAddress(userToken, state, intent, self){
-  if(self.event.context !== undefined && self.event.context.System.user.permissions.consentToken !== undefined){
+  console.log(self.event);
+  if(self.event.context !== undefined && self.event.context.System.user.permissions !== undefined && self.event.context.System.user.permissions.consentToken !== undefined){
     var deviceId = self.event.context.System.device.deviceId;
     var consentToken = self.event.context.System.user.permissions.consentToken;
     var apiEndPoint = self.event.context.System.apiEndpoint + '/v1/devices/' + deviceId + '/settings/address';
-
     getAmazonAddress(apiEndPoint, consentToken).then(function(response){
+      console.log(response.body);
       if(response.statusCode == 200 && response.body.addressLine1 !== undefined && response.body.addressLine1 != ''){
         var esriDataHelper = new EsriDataHelper();
-  			esriDataHelper.requestAddressInformation(response.body.addressLine1).then(function(response) {
-  				self.attributes["address"] = {"x": response.candidates[0].location.x, "y": response.candidates[0].location.y};
+        esriDataHelper.requestAddressInformation(response.body.addressLine1).then(function(response) {
+          console.log('response from esri');
+          console.log(response.candidates[0]);
+          self.attributes["address"] = {"x": response.candidates[0].location.x, "y": response.candidates[0].location.y, "address": response.candidates[0].address};
           self.handler.state = state;
           self.emitWithState(intent, true);
-  			}).catch(function(err){
-  				console.log('Error in geocoding address');
-  		    console.log(err);
-  			});
+        }).catch(function(err){
+          console.log('Error in geocoding address');
+          console.log(err);
+        });
       } else {
         salesForceAddress(userToken, state, intent, self);
       }
@@ -1020,7 +1024,7 @@ function salesForceAddress(userToken, state, intent, self){
 function getAmazonAddress(apiEndpoint, userToken){
   var options = {
     //uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
-		uri: apiEndpoint,
+    uri: apiEndpoint,
     qs: {}, //Query string data
     method: 'GET', //Specify the method
     json: true,

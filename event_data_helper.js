@@ -105,11 +105,14 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
     return 'There are no scheduled events for that day';
   } else {
     eventContent.forEach(function(item) {
-      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} at ${eventLocation}. ')({
+      console.log(item);
+      var location = (item.Location === null || item.Location === undefined) ? ' ' : 'at ' + item.Location;
+      console.log(location);
+      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} ${eventLocation}. ')({
         eventStart: helperClass.formatTimeString(Date.parse(item.StartDate)),
         eventEnd: helperClass.formatTimeString(Date.parse(item.EndDate)),
         eventTitle: item.Title,
-        eventLocation: item.Location
+        eventLocation: location
       });
     });
     response = _.template('On ${date} there ${prep} ${count} event${s}: ${eventData}')({

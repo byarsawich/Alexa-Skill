@@ -88,7 +88,7 @@ describe('EventDataHelper', function() {
     context('when passed multiple events', function() {
       it('gives all events title, start, end', function() {
         var value = subject.formatEventData(sampleReturnWithEvents)
-        expect(value).to.eq('On Sat Mar 25 there are 2 events: Cary Ballet presents Spring Mixed Repertoire starts at 07:00:00 PM, and ends at 11:59:00 PM at . NCSU Sigma Pi Break the Silence 5K Run/Walk starts at 10:00:00 AM, and ends at 02:00:00 PM at . ');
+        expect(value).to.eq('On Sat Mar 25 there are 2 events: Cary Ballet presents Spring Mixed Repertoire starts at 07:00:00 PM, and ends at 11:59:00 PM  . NCSU Sigma Pi Break the Silence 5K Run/Walk starts at 10:00:00 AM, and ends at 02:00:00 PM  . ');
       });
     });
   });

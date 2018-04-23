@@ -66,8 +66,13 @@ var newSessionHandlers = {
   'LaunchRequest': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("LaunchIntent","Success", JSON.stringify(this.event.session)).send();
-    console.log(this.event.context.System);
-    this.emit(':ask', welcomeMessage, welcomeReprompt);
+    console.log(JSON.stringify(this.event.context.System));
+    sendOutput(this, ':ask', welcomeMessage, welcomeReprompt);
+  },
+
+  'GetByAddressIntent': function(){
+    var prompt = 'If you require assistance with the skill please ask for help.';
+    sendOutput(this, ':tell', prompt);
   },
 
   'OpenGymTimesIntent': function () {
@@ -83,7 +88,8 @@ var newSessionHandlers = {
     if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       prompt = 'Please choose a single day for open gym times.';
       intentTrackingID.event("OpenGymTimesIntent","Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':ask', prompt);
+
+      sendOutput(self, ':ask', prompt);
       return;
     }
     var openDataHelper = new OpenDataHelper();
@@ -100,12 +106,12 @@ var newSessionHandlers = {
       return openDataHelper.formatGymTimes(gymTimeStatus);
     }).then(function(response){
       intentTrackingID.event("OpenGymTimesIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      sendOutput(self, ':tell', response);
     }).catch(function(err) {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
       console.log(err);
       intentTrackingID.event("OpenGymTimesIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -118,7 +124,8 @@ var newSessionHandlers = {
     if(studioTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       prompt = 'Please choose a single day for open studio times.';
       intentTrackingID.event("OpenStudioTimesIntent","Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':ask', prompt);
+
+      sendOutput(self, ':ask', prompt);
       return;
     }
     var openDataHelper = new OpenDataHelper();
@@ -129,12 +136,14 @@ var newSessionHandlers = {
       return openDataHelper.formatStudioTimes(studioTimeStatus);
     }).then(function(response){
       intentTrackingID.event("OpenStudioTimesIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err) {
       prompt = 'I didn\'t have data for studio times on ' + studioTimeDate;
       console.log(err);
       intentTrackingID.event("OpenStudioTimesIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -150,12 +159,14 @@ var newSessionHandlers = {
       return openDataHelper.formatNextStudioTime(studioTimeStatus);
     }).then(function(response){
       intentTrackingID.event("NextOpenStudioIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err) {
       prompt = 'I didn\'t have data for studio times on ' + studioTimeDate;
       console.log(err);
       intentTrackingID.event("NextOpenStudioIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -164,7 +175,8 @@ var newSessionHandlers = {
     var index = Math.floor(Math.random() * facts['facts'].length);
     var prompt = facts['facts'][index];
     intentTrackingID.event("GetCaryFactsIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', prompt);
+
+    sendOutput(this, ':tell', prompt);
   },
 
   'MyCouncilMemberIntent': function() {
@@ -201,12 +213,14 @@ var newSessionHandlers = {
       return openDataHelper.formatAllCouncilMembers(response);
     }).then(function(response){
       intentTrackingID.event("AllCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
       intentTrackingID.event("AllCouncilMembersIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -220,12 +234,14 @@ var newSessionHandlers = {
       return openDataHelper.formatAtLargeCouncilMembers(response);
     }).then(function(response){
       intentTrackingID.event("AtLargeCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
       intentTrackingID.event('AtLargeCouncilMembersIntent', "Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -239,12 +255,14 @@ var newSessionHandlers = {
       return openDataHelper.formatMayor(response);
     }).then(function(response){
       intentTrackingID.event("MyMayorIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
       intentTrackingID.event("MyMayorIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -253,16 +271,21 @@ var newSessionHandlers = {
     console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
+    console.log(self.event.session.user.accessToken);
     if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
       var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStartIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tellWithLinkAccountCard', speechOutput);
+      var prompt = scrub(speechOutput);
+      self.attributes["speechOutput"] = prompt;
+      self.emit(':tellWithLinkAccountCard', prompt);
     } else {
       var prompt = "OK, let's create a new Case. What do you need help with?";
       var reprompt = 'For a list of options please say help.  What do you need help with?';
       intentTrackingID.event("CaseStartIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.handler.state = APP_STATES.CASE;
-      self.emit(':ask', prompt, reprompt);
+
+
+      sendOutput(self, ':ask', prompt, reprompt);
     }
   },
 
@@ -272,9 +295,12 @@ var newSessionHandlers = {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var self = this;
+    console.log(self.event.session.user.accessToken);
     if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
       var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseConfirmationIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      var prompt = scrub(speechOutput);
+      self.attributes["speechOutput"] = prompt;
       self.emit(':tellWithLinkAccountCard', speechOutput);
     } else {
       intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
@@ -298,6 +324,8 @@ var newSessionHandlers = {
     if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
       var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("MyCaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      speechOutput = scrub(speechOutput);
+      self.attributes["speechOutput"] = speechOutput;
       self.emit(':tellWithLinkAccountCard', speechOutput);
     } else {
       var salesforceHelper = new SalesforceHelper();
@@ -310,12 +338,15 @@ var newSessionHandlers = {
         return salesforceHelper.formatExistingCase(response);
       }).then(function(response) {
         intentTrackingID.event("MyCaseStatusIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-        self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
+        prompt = scrub(response.prompt);
+        self.attributes["speechOutput"] = prompt;
+        self.emit(':tellWithCard', prompt, 'Town of Cary Case', response.card);
       }).catch(function(err){
         prompt = 'There seems to be a problem with the connection right now.  Please try again later';
         console.log(err);
         intentTrackingID.event("MyCaseStatusIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-        self.emit(':tell', prompt);
+
+        sendOutput(self, ':tell', prompt);
       });
     }
   },
@@ -326,6 +357,7 @@ var newSessionHandlers = {
     if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
       var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.attributes["speechOutput"] = prompt;
       self.emit(':tellWithLinkAccountCard', speechOutput);
     } else {
       var helperClass = new HelperClass();
@@ -340,17 +372,19 @@ var newSessionHandlers = {
         console.log(response)
         if(response.length <= 0){
           intentTrackingID.event("Wrong Input","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-          self.emit(':tell', 'I could not find a case with that number on your account.  Please double check your case number.');
+          sendOutput(self, ':tell', 'I could not find a case with that number on your account.  Please double check your case number.');
         }
         return salesforceHelper.formatExistingCase(response);
       }).then(function(response) {
         intentTrackingID.event("CaseStatusIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-        self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
+        prompt = scrub(response.prompt);
+        self.attributes["speechOutput"] = prompt;
+        self.emit(':tellWithCard', prompt, 'Town of Cary Case', response.card);
       }).catch(function(err){
         prompt = 'There seems to be a problem with the connection right now.  Please try again later';
         console.log(err);
         intentTrackingID.event("CaseStatusIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-        self.emit(':tell', prompt);
+        sendOutput(self, ':tell', prompt);
       });
     }
   },
@@ -361,22 +395,27 @@ var newSessionHandlers = {
     var salesforceHelper = new SalesforceHelper();
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var self = this;
+    var prompt = '';
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
-      var prompt = 'Please choose a single day for town hall hours.';
+      prompt = 'Please choose a single day for town hall hours.';
       intentTrackingID.event("TownHallHoursIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':ask', prompt);
+
+
+      sendOutput(self, ':ask', prompt);
       return;
     }
     salesforceHelper.getTownHallHours(userToken, date).then(function(response){
       return salesforceHelper.formatTownHallHours(response, date);
     }).then(function(response){
       intentTrackingID.event("TownHallHoursIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err){
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
       intentTrackingID.event("TownHallHoursIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -384,10 +423,13 @@ var newSessionHandlers = {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var self = this;
+    var prompt = '';
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
       intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':ask', prompt);
+
+
+      sendOutput(self, ':ask', prompt);
       return;
     }
 
@@ -399,16 +441,18 @@ var newSessionHandlers = {
       return eventDataHelper.formatEventData(response);
     }).then(function(response){
       intentTrackingID.event("UpcomingCaryEventsIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      response = response.replace('&', 'and');
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      console.log(prompt);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err){
       console.log('error in events retrieval');
       console.log(err);
       var prompt = 'I\'m sorry, there was an error in finding events.';
       intentTrackingID.event("UpcomingCaryEventsIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt)
+      sendOutput(self, ':tell', response);
     });
   },
+
 
   'FieldStatusIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
@@ -420,19 +464,22 @@ var newSessionHandlers = {
     if(parkName === undefined || helperClass.FIELDNAMEPAIRINGS[parkName.toUpperCase()] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
       intentTrackingID.event("FieldStatusIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     }
     var fieldStatusHelper = new FieldStatusHelper();
     fieldStatusHelper.getAllFieldStatus().then(function(response){
       return fieldStatusHelper.formatFieldStatus(response, parkName);
     }).then(function(response){
       intentTrackingID.event("FieldStatusIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err){
       console.log(err);
       prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
       intentTrackingID.event("FieldStatusIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -447,19 +494,27 @@ var newSessionHandlers = {
       return rssFeedHelper.formatRSSFeed(response);
     }).then(function(response) {
       intentTrackingID.event("RSSFeedIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(err){
       prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
       console.log(err);
       intentTrackingID.event("RSSFeedIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+    console.log(JSON.stringify(this));
+    var speech = this.attributes['speechOutput'];
+    if(speech === undefined || speech === ''){
+      this.emit(':tell', 'I\'m sorry, I didn\'t catch that');
+    } else {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['speechOutput']);
+    }
   },
 
   'AMAZON.HelpIntent': function() {
@@ -471,20 +526,20 @@ var newSessionHandlers = {
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   }
 };
 
@@ -505,12 +560,14 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
       return esriDataHelper.formatMyCouncilMember(response);
     }).then(function(response) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       prompt = 'I could not find any information for ' + address;
       console.log(error);
       intentTrackingID.event("GetByAddressIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -524,13 +581,15 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
       return esriDataHelper.formatMyCouncilMember(response);
     }).then(function(response) {
       intentTrackingID.event("GetCouncilInfoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+
+      sendOutput(self, ':tell', response);
     }).catch(function(error){
       console.log(error);
       var prompt = 'I could not find any information at your location.  Would you like to try another address?';
       var reprompt = 'Would you like to try searching at another address?';
       intentTrackingID.event("GetCouncilInfoIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':ask', prompt, reprompt);
+
+      sendOutput(self, ':ask', prompt, reprompt);
     });
   },
 
@@ -538,14 +597,14 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your council information';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
-    this.emit(':tell', prompt)
+    sendOutput(this, ':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -558,26 +617,26 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up your council information.'
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   }
 });
 
@@ -599,11 +658,13 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
       return esriDataHelper.formatNearbyParks(response);
     }).then(function(responseresponse) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       prompt = 'I could not find any parks near ' + address;
       intentTrackingID.event("GetByAddressIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -619,13 +680,14 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
       return esriDataHelper.formatNearbyParks(response);
     }).then(function(response) {
       intentTrackingID.event("GetParkInfoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+
+      sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       console.log(error);
       var prompt = 'I could not find any parks near your location.  Would you like to try another address?';
       var reprompt = 'Would you like to try searching at another address?';
       intentTrackingID.event("GetParkInfoIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':ask', prompt, reprompt);
+      sendOutput(self, ':ask', prompt, reprompt);
     });
   },
 
@@ -633,14 +695,14 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby parks';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
-    this.emit(':tell', prompt);
+    sendOutput(this, ':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -653,26 +715,26 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   }
 });
 
@@ -694,11 +756,11 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      sendOutput(self, ':tell', response);
     }).catch(function(error){
       prompt = 'I could not find any public art near ' + address;
       intentTrackingID.event("GetByAddressIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -713,13 +775,13 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
       intentTrackingID.event("GetPublicArtInfoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+      sendOutput(self, ':tell', response);
     }).catch(function(error){
       console.log(error);
       var prompt = 'I could not find any public art near your location.  Would you like to try another address?';
       var reprompt = 'Would you like to try searching at another address?';
       intentTrackingID.event("GetPublicArtInfoIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':ask', prompt, reprompt);
+      sendOutput(self, ':ask', prompt, reprompt);
     });
   },
 
@@ -727,14 +789,14 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby public art';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
-    this.emit(':tell', prompt);
+    sendOutput(this, ':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -747,31 +809,32 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   }
 });
 
 var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
+    console.log('CreateCaseIntent');
     console.log(this.event.request.intent);
     console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
@@ -781,21 +844,34 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var prompt = '';
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
-      self.attributes['case'] = response;
-      self.attributes['caseIssue'] = response.Case_Issue_Name__c;
-      return salesforceHelper.formatNewCaseStatus(response);
+      if(response === undefined){
+        prompt = 'There was an error connecting to Salesforce.  Please try again later or contact Public Works at 919 469 4090';
+        intentTrackingID.event("CreateCaseIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
+        console.log(err);
+
+        sendOutput(self, ':tell', prompt);
+        return undefined;
+      } else {
+        self.attributes['case'] = response;
+        self.attributes['caseIssue'] = response.Case_Issue_Name__c;
+        return salesforceHelper.formatNewCaseStatus(response);
+      }
     }).then(function(response){
       intentTrackingID.event("CreateCaseIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
+      prompt = scrub(response.prompt);
+      self.attributes["speechOutput"] = prompt;
+      self.emit(':tellWithCard', prompt, 'Town of Cary Case', response.card);
     }).catch(function(err) {
-      prompt = 'Darn, there was a Salesforce problem, sorry';
+      prompt = 'There was an error connecting to Salesforce.  Please try again later or contact Public Works at 919 469 4090';
       intentTrackingID.event("CreateCaseIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
       console.log(err);
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
   'CaseConfirmationIntent': function () {
+    console.log('CaseConfirmationIntent');
     console.log(this.event.request.intent);
     console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
@@ -814,18 +890,19 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
           caseIssue: caseIssue
         });
         intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-        this.emit(':ask', prompt, prompt);
+        sendOutput(this, ':ask', prompt, prompt);
       }
     } else {
       var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
         caseIssue: caseIssue
       });
       intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-      this.emit(':ask', prompt, prompt);
+      sendOutput(this, ':ask', prompt, prompt);
     }
   },
 
   'AMAZON.YesIntent': function() {
+    console.log('yes intent');
     console.log(this.event.request.intent);
     console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
@@ -856,13 +933,13 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
@@ -871,7 +948,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   }
 });
 
@@ -892,11 +969,13 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
       return esriDataHelper.formatMyTrashDay(response);
     }).then(function(response) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+
+      sendOutput(self, ':tell', response);
     }).catch(function(error){
       var prompt = 'I could not find any information for ' + address;
       intentTrackingID.event("GetByAddressIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':tell', prompt);
+
+      sendOutput(self, ':tell', prompt);
     });
   },
 
@@ -910,13 +989,14 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
       return esriDataHelper.formatMyTrashDay(response);
     }).then(function(response) {
       intentTrackingID.event("GetTrashDayIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
+
+      sendOutput(self, ':tell', response);
     }).catch(function(error){
       console.log(error);
       var prompt = 'I could not find any information about your location.  Would you like to try another address?';
       var reprompt = 'Would you like to try searching at another address?';
       intentTrackingID.event("GetTrashDayIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
-      self.emit(':ask', prompt, reprompt);
+      sendOutput(self, ':ask', prompt, reprompt);
     });
   },
 
@@ -924,14 +1004,14 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your next trash and recycle day.';
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
-    this.emit(':tell', prompt);
+    sendOutput(this, ':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -944,26 +1024,27 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look your next trash and recycle day.'
-    this.emit(':ask', prompt, prompt);
+    sendOutput(this, ':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':tell', 'Goodbye');
+    sendOutput(this, ':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
-    this.emit(':ask', prompt, prompt);
+
+    sendOutput(this, ':ask', prompt, prompt);
   }
 });
 
@@ -1016,7 +1097,7 @@ function salesForceAddress(userToken, state, intent, self){
     if(self.attributes["address"] == undefined || self.attributes["address"] == null){
       self.handler.state = state;
       var prompt = 'Please tell me your street address so I can look up your requested information';
-      self.emit(':ask', prompt, prompt);
+      sendOutput(self, ':ask', prompt, prompt);
     }
   });
 }
@@ -1042,4 +1123,21 @@ function checkCaseIssue(caseIssue){
     return false;
   }
   return (caseIssue.toUpperCase() == this.caseSubject.toUpperCase() + ' ' + this.caseAction.toUpperCase()) || (caseIssue.toUpperCase() == this.caseAction.toUpperCase() + ' ' + this.caseSubject.toUpperCase());
+}
+
+function scrub(text){
+  return text.replace(/&/g, ' and ');
+}
+
+function sendOutput(self, type, prompt, reprompt){
+  prompt = scrub(prompt);
+  self.attributes["speechOutput"] = prompt;
+  if(reprompt !== undefined){
+    reprompt = scrub(reprompt);
+    self.attributes["repromptText"] = reprompt;
+    self.emit(type, prompt, reprompt);
+  } else {
+    self.emit(type, prompt);
+  }
+
 }

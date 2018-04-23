@@ -8,6 +8,75 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
 //salesforce community login URL
 var INSTANCE_URL = process.env.SALESFORCEURL;
+var SALESFORCE_V = process.env.SALESFORCEVERSION;
+
+var CASEISSUEMATCHING = {
+	'PICKUP YARD WASTE': 'Missed Trash',
+	'PICKUP TRASH': 'Missed Trash',
+	'PICKUP GARBAGE': 'Missed Trash',
+	'PICKUP RUBBISH': 'Missed Trash',
+	'PICKUP WASTE': 'Missed Trash',
+	'PICKUP RECYCLING': 'Missed Trash',
+	'PICKUP OIL': 'Oil Collection',
+	'PICKUP CARDBOARD': 'Cardboard Collection',
+	'PICKUP LEAF': 'Leaf Collection',
+	'PICKUP LEAVES': 'Leaf Collection',
+
+	'UPGRADE YARD WASTE': 'Missed Trash',
+	'UPGRADE TRASH': 'Cart Exchange',
+	'UPGRADE GARBAGE': 'Cart Exchange',
+	'UPGRADE RUBBISH': 'Cart Exchange',
+	'UPGRADE WASTE': 'Cart Exchange',
+	'UPGRADE RECYCLING': 'Cart Exchange',
+	'UPGRADE OIL': 'Oil Collection',
+	'UPGRADE CARDBOARD': 'Cardboard Collection',
+	'UPGRADE LEAF': 'Leaf Collection',
+	'UPGRADE LEAVES': 'Leaf Collection',
+
+	'COLLECTION YARD WASTE': 'Missed Trash',
+	'COLLECTION TRASH': 'Missed Trash',
+	'COLLECTION GARBAGE': 'Missed Trash',
+	'COLLECTION RUBBISH': 'Missed Trash',
+	'COLLECTION WASTE': 'Missed Trash',
+	'COLLECTION RECYCLING': 'Missed Trash',
+	'COLLECTION OIL': 'Oil Collection',
+	'COLLECTION CARDBOARD': 'Cardboard Collection',
+	'COLLECTION LEAF': 'Leaf Collection',
+	'COLLECTION LEAVES': 'Leaf Collection',
+
+	'BROKEN YARD WASTE': 'Cart Exchange',
+	'BROKEN TRASH': 'Cart Exchange',
+	'BROKEN GARBAGE': 'Cart Exchange',
+	'BROKEN RUBBISH': 'Cart Exchange',
+	'BROKEN WASTE': 'Cart Exchange',
+	'BROKEN RECYCLING': 'Cart Exchange',
+	'BROKEN OIL': 'Oil Collection',
+	'BROKEN CARDBOARD': 'Cardboard Collection',
+	'BROKEN LEAF': 'Leaf Collection',
+	'BROKEN LEAVES': 'Leaf Collection',
+
+	'MISSED YARD WASTE': 'Missed Trash',
+	'MISSED TRASH': 'Missed Trash',
+	'MISSED GARBAGE': 'Missed Trash',
+	'MISSED RUBBISH': 'Missed Trash',
+	'MISSED WASTE': 'Missed Trash',
+	'MISSED RECYCLING': 'Missed Trash',
+	'MISSED OIL': 'Oil Collection',
+	'MISSED CARDBOARD': 'Cardboard Collection',
+	'MISSED LEAF': 'Leaf Collection',
+	'MISSED LEAVES': 'Leaf Collection',
+
+	'YARD WASTE': 'Missed Trash',
+	'TRASH': 'Missed Trash',
+	'GARBAGE': 'Missed Trash',
+	'RUBBISH': 'Missed Trash',
+	'WASTE': 'Missed Trash',
+	'RECYCLING': 'Missed Trash',
+	'OIL': 'Oil Collection',
+	'CARDBOARD': 'Cardboard Collection',
+	'LEAF': 'Leaf Collection',
+	'LEAVES': 'Leaf Collection'
+}
 
 function SalesforceHelper() { }
 
@@ -17,15 +86,22 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
   return getContactId(userToken).then(function(results){
+			console.log('got contactId: ' + results);
       obj.ContactId = results
-      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssue + "%'");
+      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + CASEISSUEMATCHING[caseIssue.toUpperCase()] + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
-		obj.CaseIssue__c = caseIssueRecord.Id;
-		return conn.query("Select Id from RecordType where Name = 'public works case'");
+		console.log('caseIssueRecord: ' + caseIssueRecord);
+		console.log(results);
+		if(caseIssueRecord === null || caseIssueRecord === undefined){
+			return undefined;
+		} else {
+			obj.CaseIssue__c = caseIssueRecord.Id;
+			return conn.query("Select Id from RecordType where Name = 'public works case'");
+		}
 	}).then(function(results) {
     var recordType = results.records[0];
     obj.RecordTypeId = recordType.Id;
@@ -47,7 +123,7 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
 	return getContactId(userToken).then(function(results){
 		var q = '';
@@ -72,7 +148,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
 	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, Case_Issue_Name__c from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
 			return results.records;
@@ -126,7 +202,8 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 	console.log(INSTANCE_URL);
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
-		accessToken : userToken
+		accessToken : userToken,
+		version: SALESFORCE_V
 	});
 	return getContactId(userToken).then(function(results){
 		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results +"'" );
@@ -154,7 +231,7 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version: '39.0'
+		version: SALESFORCE_V
 	});
 
 	return conn.query('Select ActivityDate from Holiday').then(function(response) {

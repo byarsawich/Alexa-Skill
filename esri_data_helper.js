@@ -156,7 +156,7 @@ EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
       nextTrash: nextTrash
     });
   } else {
-    prompt = _.template('Your next trash day is ${nextTrash} and your recycle date is next week, ${nextRecycle}')({
+    prompt = _.template('Your next trash day is ${nextTrash} and your recycle date is the next week, ${nextRecycle}')({
       nextTrash: nextTrash,
       nextRecycle: nextRecycle
     });

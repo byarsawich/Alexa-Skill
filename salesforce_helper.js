@@ -7,6 +7,7 @@ var HelperClass = require('./helper_functions.js');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
 //salesforce community login URL
+//test comment
 var INSTANCE_URL = process.env.SALESFORCEURL;
 var SALESFORCE_V = process.env.SALESFORCEVERSION;
 

@@ -673,14 +673,14 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var address = this.attributes['address'];
-    esriDataHelper.requestAddressInformation(address).then(function(response) {
-      var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
-      return esriDataHelper.requestInformationByRadius(address.x, address.y, DISTANCE, uri)
-    }).then(function(response){
+    console.log(address);
+    var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
+    var prompt = '';
+    esriDataHelper.requestInformationByRadius(address.x, address.y, DISTANCE, uri).then(function(response){
       return esriDataHelper.formatNearbyParks(response);
     }).then(function(response) {
       intentTrackingID.event("GetParkInfoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-
+      prompt = scrub(response);
       sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       console.log(error);
@@ -756,7 +756,8 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
       intentTrackingID.event("GetByAddressIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      sendOutput(self, ':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       prompt = 'I could not find any public art near ' + address;
       intentTrackingID.event("GetByAddressIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
@@ -775,7 +776,8 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
       intentTrackingID.event("GetPublicArtInfoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      sendOutput(self, ':tell', response);
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
     }).catch(function(error){
       console.log(error);
       var prompt = 'I could not find any public art near your location.  Would you like to try another address?';

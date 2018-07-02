@@ -103,6 +103,16 @@ describe('EsriDataHelper', function() {
           expect(obj.features[0].attributes["Day"]).to.eq("Wed");
         });
       });
+      it('Calls the esri helper to get formated trash day', function() {
+        var value = subject.requestAddressInformation(address).then(function(obj){
+          var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+          return subject.requestESRIInformation(uri)
+        }).then(function(obj){
+          return subject.formatMyTrashDay(obj)
+        }).then(function(obj){
+          console.log(obj);
+        });
+      });
     });
   });
   describe('#formatMyCouncilMember', function() {

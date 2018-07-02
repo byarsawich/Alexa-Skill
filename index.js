@@ -427,15 +427,13 @@ var newSessionHandlers = {
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
       intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-
-
       sendOutput(self, ':ask', prompt);
       return;
     }
 
     var startDate = date + 'T00:00:00';
     var endDate = date + 'T23:59:59';
-    var uri = EVENTDATAENDPOINT
+    var uri = EVENTDATAENDPOINT;
     var eventDataHelper = new EventDataHelper();
     eventDataHelper.requestEventData(uri, startDate, endDate).then(function(response){
       return eventDataHelper.formatEventData(response);

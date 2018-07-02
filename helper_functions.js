@@ -3,10 +3,7 @@ var promise = require('bluebird');
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
 var CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
-
-function HelperClass() { }
-
-HelperClass.prototype.FIELDNAMEPAIRINGS = {
+const FIELDNAMEPAIRINGS = {
 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK',
 'MILLS PARK MIDDLE': 'MILLS PARK',
 'MILLS PARK': 'MILLS PARK',
@@ -61,10 +58,21 @@ HelperClass.prototype.FIELDNAMEPAIRINGS = {
 'CARY ARTS CENTER': 'CARY ARTS CENTER',
 'CARY ARTS': 'CARY ARTS CENTER'};
 
-HelperClass.prototype.EVENTLOCATIONS = {};
+class HelperClass{
+
+  constructor(){ }
+
+
+get FIELDNAMEPAIRINGS() {
+  return FIELDNAMEPAIRINGS;
+};
+
+get EVENTLOCATIONS() {
+  return EVENTLOCATIONS;
+};
 
 //date formating functions to make a response sound better for alexa
-HelperClass.prototype.formatDate = function (date) {
+formatDate(date) {
   var i = date.toString().search(/20\d{2}/);
   if (i > 0) {
     return date.toString().slice(0, i).trim();
@@ -72,14 +80,14 @@ HelperClass.prototype.formatDate = function (date) {
   return date;
 };
 
-HelperClass.prototype.formatDateTime = function (dateTime) {
+formatDateTime(dateTime) {
   if (dateTime !== null && dateTime !== undefined){
     return this.formatDate(dateTime) + ' at ' +  this.formatTimeString(dateTime);
   }
   return null;
 };
 
-HelperClass.prototype.formatTimeString = function (date) {
+formatTimeString(date) {
   if ((typeof(date) !== 'object') || (date.constructor !== Date)) {
     throw new Error('argument must be a Date object');
   }
@@ -90,12 +98,12 @@ HelperClass.prototype.formatTimeString = function (date) {
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
 };
 
-HelperClass.prototype.formatAddress = function (fullAddress) {
+formatAddress(fullAddress) {
   var sliceIndex = fullAddress.toUpperCase().search('CARY') || fullAddress.toUpperCase().search('APEX') || fullAddress.toUpperCase().search('MORRISVILLE');
 	return fullAddress.slice(0, sliceIndex - 1).trim();
 };
 
-HelperClass.prototype.getRecycleDay = function (cycle, trashDay) {
+getRecycleDay(cycle, trashDay) {
   var diff;
   if (cycle == 'BLUE') {
     diff = Date.DateDiff('d', RECYCLEBLUESTART, Date.today()) % 14;
@@ -111,7 +119,7 @@ HelperClass.prototype.getRecycleDay = function (cycle, trashDay) {
   }
 };
 
-HelperClass.prototype.getCircleCoords = function (x,y,d) {
+getCircleCoords(x,y,d) {
   var tao = 2 * Math.PI;
   var results = [];
   var pointsInCircle = 8
@@ -126,13 +134,13 @@ HelperClass.prototype.getCircleCoords = function (x,y,d) {
   return results;
 };
 
-HelperClass.prototype.addLeadZeros =  function (caseNumber, caseNumberLength) {
+addLeadZeros(caseNumber, caseNumberLength) {
   var filler = '0';
   var results = filler.repeat(caseNumberLength - caseNumber.length).concat(caseNumber);
   return results.valueOf();
 };
 
-HelperClass.prototype.addCaseAction = function (caseSubject){
+addCaseAction(caseSubject){
   if(caseSubject !== undefined){
     return CASESUBJECTPAIRINGS[caseSubject.toUpperCase()];
   } else {
@@ -140,7 +148,7 @@ HelperClass.prototype.addCaseAction = function (caseSubject){
   }
 };
 
-HelperClass.prototype.addFieldResults = promise.method(function (body, results) {
+addFieldResults(body, results) {
   var lines = body.toString().split("\n");
   for (var i = 1; i < lines.length; i++) {
     var fieldInfo = lines[i].split("\t");
@@ -158,10 +166,10 @@ HelperClass.prototype.addFieldResults = promise.method(function (body, results) 
     }
   }
   return results;
-});
+};
 
 //next two functions are from Amazon's calendar reader on github used to parse the Amazon.Date slot type.
-HelperClass.prototype.getWeekendData = function (res) {
+getWeekendData(res) {
     if (res.length === 3) {
         var saturdayIndex = 5;
         var sundayIndex = 6;
@@ -177,11 +185,11 @@ HelperClass.prototype.getWeekendData = function (res) {
     }
 }
 
-HelperClass.prototype.getPrepostion = function(len) {
+getPrepostion(len) {
   return len > 1 ? 'are' : 'is';
 }
 
-var w2date = function (year, wn, dayNb) {
+w2date(year, wn, dayNb) {
     var day = 86400000;
 
     var j10 = new Date(year, 0, 10, 12, 0, 0),
@@ -190,5 +198,5 @@ var w2date = function (year, wn, dayNb) {
     return new Date(mon1 + ((wn - 1) * 7 + dayNb) * day);
 };
 
-
+}
 module.exports = HelperClass;

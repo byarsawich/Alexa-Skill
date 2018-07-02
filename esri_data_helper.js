@@ -2,8 +2,11 @@
 var _ = require('lodash');
 var rp = require('request-promise');
 var HelperClass = require('./helper_functions.js');
+var EventDataHelper = require('./event_data_helper');
+var moment = require('moment');
 require('./jsDate.js')();
 require('datejs');
+var EVENTDATAENDPOINT = 'http://www.townofcary.org/API';
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var EARTHRADUIS = 3959;
 var RECYCLEYELLOWSTART = '2017-01-01';
@@ -139,29 +142,85 @@ EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
   var helperClass = new HelperClass();
   var trashDay =  DAYS[trashInfo.features[0].attributes.Day.toUpperCase()];
   var cycle = trashInfo.features[0].attributes.Cycle.toUpperCase();
-  var nextTrash;
+  var nextDays = {};
   //If trash day equals today
   if(Date.parse(trashDay).equals(Date.today())){
-    nextTrash = helperClass.formatDate(Date.parse(Date.today()));
+    nextDays.Trash = helperClass.formatDate(Date.parse(Date.today()));
   } else {
-    nextTrash = helperClass.formatDate(Date.parse('next ' + trashDay));
+    nextDays.Trash = helperClass.formatDate(Date.parse('next ' + trashDay));
   }
-  var nextRecycle = helperClass.getRecycleDay(cycle, trashDay);
+  nextDays.Recycle = helperClass.getRecycleDay(cycle, trashDay);
   var prompt = '';
+  nextDays = this.checkTrashDays(nextDays);
   console.log('The two days trash first');
-  console.log(nextTrash);
-  console.log(nextRecycle);
-  if(nextRecycle == nextTrash){
+  console.log(nextDays);
+  if(nextDays.Recycle == nextDays.Trash){
     prompt = _.template('Your next trash and recycle day is ${nextTrash}')({
-      nextTrash: nextTrash
+      nextTrash: nextDays.Trash
     });
   } else {
     prompt = _.template('Your next trash day is ${nextTrash} and your recycle date is the next week, ${nextRecycle}')({
-      nextTrash: nextTrash,
-      nextRecycle: nextRecycle
+      nextTrash: nextDays.Trash,
+      nextRecycle: nextDays.Recycle
     });
   }
   return prompt;
-}
+};
+
+EsriDataHelper.prototype.checkTrashDays = function (NextDays) {
+  var uri = EVENTDATAENDPOINT;
+  var helperClass = new HelperClass();
+  console.log(NextDays);
+  var eventDataHelper = new EventDataHelper();
+  var trashDay = Date.yyyymmdd(Date.parse(NextDays.Trash));
+  var recycleDay = Date.yyyymmdd(Date.parse(NextDays.Recycle));
+  var trashStartDate = moment(trashDay).startOf('week');
+  console.log(trashStartDate);
+  var trashEndDate = moment(trashDay).endOf('week');
+  var recStartDate = moment(recycleDay).startOf('week');
+  var recEndDate = moment(recycleDay).endOf('week');
+  if (NextDays.Trash == NextDays.Recycle) {
+    return eventDataHelper.requestEventData(uri, trashStartDate, trashEndDate, 'Town Holiday').then(function(response) {
+      console.log(response);
+      if (response.PagingList.TotalResults <= 0) {
+        return NextDays;
+      } else {
+        var holidayDay = response.PagingList.Content.StartDate.moment().day();
+        if (moment(trashDay).day() >= holidayDay) {
+          NextDays.Trash = helperClass.formatDate(moment(trashDay).add(1, 'd'));
+          NextDays.Recycle = helperClass.formateDate(moment(trashDay).add(1, 'd'));
+        }
+        return NextDays;
+      }
+    });
+  } else {
+    NextDays.Trash = eventDataHelper.requestEventData(uri, trashStartDate, trashEndDate, 'Town Holiday').then(function(response) {
+      console.log(response);
+      if (response.PagingList.TotalResults <= 0) {
+        return NextDays.Trash;
+      } else {
+        var holidayDay = response.PagingList.Content.StartDate.moment().day();
+        if (moment(trashDay).day() >= holidayDay) {
+          NextDays.Trash = helperClass.formatDate(moment(trashDay).add(1, 'd'));
+        }
+        return NextDays.Trash;
+      }
+    });
+    NextDays.Recycle = eventDataHelper.requestEventData(uri, recStartDate, recEndDate, 'Town Holiday').then(function(response) {
+      console.log(response);
+      if (response.PagingList.TotalResults <= 0) {
+        return NextDays.Recycle;
+      } else {
+        var holidayDay = response.PagingList.Content.StartDate.moment().day();
+        if (moment(recycleDay).day() >= holidayDay) {
+          NextDays.Recycle = helperClass.formatDate(moment(recycleDay).add(1, 'd'));
+        }
+        return NextDays.Recycle;
+      }
+    });
+    console.log(NextDays);
+    return NextDays;
+  }
+};
 
 module.exports = EsriDataHelper;

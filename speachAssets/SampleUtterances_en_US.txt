@@ -1,97 +1,97 @@
-OpenGymTimesIntent	what are the open gym {Date}
-OpenGymTimesIntent	when are the open gym {Date}
+OpenGymTimesIntent	what are the open gyms {Date}
+OpenGymTimesIntent	when are the open gyms {Date}
 OpenGymTimesIntent	what are the open gym times {Date}
 OpenGymTimesIntent	when are the open gym times {Date}
-OpenGymTimesIntent	what are the open gym on {Date}
-OpenGymTimesIntent	when are the open gym on {Date}
+OpenGymTimesIntent	what are the open gyms on {Date}
+OpenGymTimesIntent	when are the open gyms on {Date}
 OpenGymTimesIntent	what are the open gym times on {Date}
 OpenGymTimesIntent	when are the open gym times on {Date}
-OpenGymTimesIntent	what are the open gym for {Date}
-OpenGymTimesIntent	when are the open gym for {Date}
+OpenGymTimesIntent	what are the open gyms for {Date}
+OpenGymTimesIntent	when are the open gyms for {Date}
 OpenGymTimesIntent	what are the open gym times for {Date}
 OpenGymTimesIntent	when are the open gym times for {Date}
-OpenGymTimesIntent	How many open gym are on {Date}
+OpenGymTimesIntent	How many open gyms are on {Date}
 OpenGymTimesIntent	How many open gym times are on {Date}
-OpenGymTimesIntent	How many open gym are there on {Date}
+OpenGymTimesIntent	How many open gyms are there on {Date}
 OpenGymTimesIntent	How many open gym times are there on {Date}
-OpenGymTimesIntent	what are the open gym {Date} at {location}
-OpenGymTimesIntent	when are the open gym {Date} at {location}
+OpenGymTimesIntent	what are the open gyms {Date} at {location}
+OpenGymTimesIntent	when are the open gyms {Date} at {location}
 OpenGymTimesIntent	what are the open gym times {Date} at {location}
 OpenGymTimesIntent	when are the open gym times {Date} at {location}
-OpenGymTimesIntent	what are the open gym on {Date} at {location}
-OpenGymTimesIntent	when are the open gym on {Date} at {location}
+OpenGymTimesIntent	what are the open gyms on {Date} at {location}
+OpenGymTimesIntent	when are the open gyms on {Date} at {location}
 OpenGymTimesIntent	what are the open gym times on {Date} at {location}
 OpenGymTimesIntent	when are the open gym times on {Date} at {location}
-OpenGymTimesIntent	what are the open gym for {Date} at {location}
-OpenGymTimesIntent	when are the open gym for {Date} at {location}
+OpenGymTimesIntent	what are the open gyms for {Date} at {location}
+OpenGymTimesIntent	when are the open gyms for {Date} at {location}
 OpenGymTimesIntent	what are the open gym times for {Date} at {location}
 OpenGymTimesIntent	when are the open gym times for {Date} at {location}
-OpenGymTimesIntent	what are the open gym {Date} at {location} community center
-OpenGymTimesIntent	when are the open gym {Date} at {location} community center
+OpenGymTimesIntent	what are the open gyms {Date} at {location} community center
+OpenGymTimesIntent	when are the open gyms {Date} at {location} community center
 OpenGymTimesIntent	what are the open gym times {Date} at {location} community center
 OpenGymTimesIntent	when are the open gym times {Date} at {location} community center
-OpenGymTimesIntent	what are the open gym on {Date} at {location} community center
-OpenGymTimesIntent	when are the open gym on {Date} at {location} community center
+OpenGymTimesIntent	what are the open gyms on {Date} at {location} community center
+OpenGymTimesIntent	when are the open gyms on {Date} at {location} community center
 OpenGymTimesIntent	what are the open gym times on {Date} at {location} community center
 OpenGymTimesIntent	when are the open gym times on {Date} at {location} community center
-OpenGymTimesIntent	what are the open gym for {Date} at {location} community center
-OpenGymTimesIntent	when are the open gym for {Date} at {location} community center
+OpenGymTimesIntent	what are the open gyms for {Date} at {location} community center
+OpenGymTimesIntent	when are the open gyms for {Date} at {location} community center
 OpenGymTimesIntent	what are the open gym times for {Date} at {location} community center
 OpenGymTimesIntent	when are the open gym times for {Date} at {location} community center
-OpenGymTimesIntent	what are the open gym at {location} {Date}
-OpenGymTimesIntent	when are the open gym at {location} {Date}
+OpenGymTimesIntent	what are the open gyms at {location} {Date}
+OpenGymTimesIntent	when are the open gyms at {location} {Date}
 OpenGymTimesIntent	what are the open gym times at {location} {Date}
 OpenGymTimesIntent	when are the open gym times at {location} {Date}
-OpenGymTimesIntent	what are the open gym at {location} community center {Date}
-OpenGymTimesIntent	when are the open gym at {location} community center {Date}
+OpenGymTimesIntent	what are the open gyms at {location} community center {Date}
+OpenGymTimesIntent	when are the open gyms at {location} community center {Date}
 OpenGymTimesIntent	what are the open gym times at {location} community center {Date}
 OpenGymTimesIntent	when are the open gym times at {location} community center {Date}
-OpenGymTimesIntent	what are the open gym at {location} on {Date}
-OpenGymTimesIntent	when are the open gym at {location} on {Date}
+OpenGymTimesIntent	what are the open gyms at {location} on {Date}
+OpenGymTimesIntent	when are the open gyms at {location} on {Date}
 OpenGymTimesIntent	what are the open gym times at {location} on {Date}
 OpenGymTimesIntent	when are the open gym times at {location} on {Date}
-OpenGymTimesIntent	what are the open gym at {location} community center on {Date}
-OpenGymTimesIntent	when are the open gym at {location} community center on {Date}
+OpenGymTimesIntent	what are the open gyms at {location} community center on {Date}
+OpenGymTimesIntent	when are the open gyms at {location} community center on {Date}
 OpenGymTimesIntent	what are the open gym times at {location} community center on {Date}
 OpenGymTimesIntent	when are the open gym times at {location} community center on {Date}
-OpenGymTimesIntent	what are the open gym at {location} for {Date}
-OpenGymTimesIntent	when are the open gym at {location} for {Date}
+OpenGymTimesIntent	what are the open gyms at {location} for {Date}
+OpenGymTimesIntent	when are the open gyms at {location} for {Date}
 OpenGymTimesIntent	what are the open gym times at {location} for {Date}
 OpenGymTimesIntent	when are the open gym times at {location} for {Date}
-OpenGymTimesIntent	what are the open gym at {location} community center for {Date}
-OpenGymTimesIntent	when are the open gym at {location} community center for {Date}
+OpenGymTimesIntent	what are the open gyms at {location} community center for {Date}
+OpenGymTimesIntent	when are the open gyms at {location} community center for {Date}
 OpenGymTimesIntent	what are the open gym times at {location} community center for {Date}
 OpenGymTimesIntent	when are the open gym times at {location} community center for {Date}
-OpenGymTimesIntent	How many open gym are on {Date} at {location}
+OpenGymTimesIntent	How many open gyms are on {Date} at {location}
 OpenGymTimesIntent	How many open gym times are on {Date} at {location}
-OpenGymTimesIntent	How many open gym are there on {Date} at {location}
+OpenGymTimesIntent	How many open gyms are there on {Date} at {location}
 OpenGymTimesIntent	How many open gym times are there on {Date} at {location}
-OpenGymTimesIntent	How many open gym are on {Date} at {location} community center
+OpenGymTimesIntent	How many open gyms are on {Date} at {location} community center
 OpenGymTimesIntent	How many open gym times are on {Date} at {location} community center
-OpenGymTimesIntent	How many open gym are there on {Date} at {location} community center
+OpenGymTimesIntent	How many open gyms are there on {Date} at {location} community center
 OpenGymTimesIntent	How many open gym times are there on {Date} at {location} community center
-OpenGymTimesIntent	How many open gym are at {location} on {Date}
+OpenGymTimesIntent	How many open gyms are at {location} on {Date}
 OpenGymTimesIntent	How many open gym times are at {location} on {Date}
-OpenGymTimesIntent	How many open gym are there at {location} on {Date}
+OpenGymTimesIntent	How many open gyms are there at {location} on {Date}
 OpenGymTimesIntent	How many open gym times are there at {location} on {Date}
-OpenGymTimesIntent	How many open gym are at {location} community center on {Date}
+OpenGymTimesIntent	How many open gyms are at {location} community center on {Date}
 OpenGymTimesIntent	How many open gym times are at {location} community center on {Date}
-OpenGymTimesIntent	How many open gym are there at {location} community center on {Date}
+OpenGymTimesIntent	How many open gyms are there at {location} community center on {Date}
 OpenGymTimesIntent	How many open gym times are there at {location} community center on {Date}
-OpenGymTimesIntent	How many open gym are at {location}
+OpenGymTimesIntent	How many open gyms are at {location}
 OpenGymTimesIntent	How many open gym times are at {location}
-OpenGymTimesIntent	How many open gym are there at {location}
+OpenGymTimesIntent	How many open gyms are there at {location}
 OpenGymTimesIntent	How many open gym times are there at {location}
-OpenGymTimesIntent	How many open gym are at {location} community center
+OpenGymTimesIntent	How many open gyms are at {location} community center
 OpenGymTimesIntent	How many open gym times are at {location} community center
-OpenGymTimesIntent	How many open gym are there at {location} community center
+OpenGymTimesIntent	How many open gyms are there at {location} community center
 OpenGymTimesIntent	How many open gym times are there at {location} community center
-OpenGymTimesIntent	what are the open gym at {location}
-OpenGymTimesIntent	when are the open gym at {location}
+OpenGymTimesIntent	what are the open gyms at {location}
+OpenGymTimesIntent	when are the open gyms at {location}
 OpenGymTimesIntent	what are the open gym times at {location}
 OpenGymTimesIntent	when are the open gym times at {location}
-OpenGymTimesIntent	what are the open gym at {location} community center
-OpenGymTimesIntent	when are the open gym at {location} community center
+OpenGymTimesIntent	what are the open gyms at {location} community center
+OpenGymTimesIntent	when are the open gyms at {location} community center
 OpenGymTimesIntent	what are the open gym times at {location} community center
 OpenGymTimesIntent	when are the open gym times at {location} community center
 OpenGymTimesIntent  what gym can I go to {Date}
@@ -216,9 +216,11 @@ CaseStartIntent	to help with a new issue
 CaseConfirmationIntent	{caseAction} {caseSubject}
 CaseConfirmationIntent	{caseAction} {caseSubject} bin
 CaseConfirmationIntent	{caseAction} {caseSubject} cart
+CaseConfirmationIntent	{caseAction} {caseSubject} can
 CaseConfirmationIntent	{caseSubject} {caseAction}
 CaseConfirmationIntent	{caseSubject} {caseAction} bin
 CaseConfirmationIntent	{caseSubject} {caseAction} cart
+CaseConfirmationIntent	{caseSubject} {caseAction} can
 CaseConfirmationIntent	i need report {caseAction} {caseSubject}
 CaseConfirmationIntent	to report {caseAction} {caseSubject}
 CaseConfirmationIntent	i need help with {caseAction} {caseSubject}
@@ -535,6 +537,9 @@ CaseConfirmationIntent	I need to arrange an {caseSubject}
 CaseConfirmationIntent	I need to schedule an {caseSubject}
 CaseConfirmationIntent	I need to set up an {caseSubject}
 CaseConfirmationIntent	I need to reserve an {caseSubject}
+CaseConfirmationIntent  my {caseSubject} can is {caseAction}
+CaseConfirmationIntent  my {caseSubject} bin is {caseAction}
+CaseConfirmationIntent  my {caseSubject} cart is {caseAction}
 
 GetCaryFactsIntent	tell me a fact about cary
 GetCaryFactsIntent	what is a fact about cary
@@ -551,6 +556,8 @@ TownHallHoursIntent	what are hours for town hall on {Date}
 TownHallHoursIntent	what are the hours for town hall on {Date}
 TownHallHoursIntent	what are town hall hours on {Date}
 TownHallHoursIntent	what are the town hall hours on {Date}
+TownHallHoursIntent what the hours are for town hall on {Date}
+TownHallHoursIntent what the hours are for town hall {Date}
 TownHallHoursIntent	is town hall closed {Date}
 TownHallHoursIntent	when is town hall closed {Date}
 TownHallHoursIntent	is the town hall closed {Date}
@@ -567,6 +574,7 @@ TownHallHoursIntent	is town hall open on {Date}
 TownHallHoursIntent	when is town hall open on {Date}
 TownHallHoursIntent	is the town hall open on {Date}
 TownHallHoursIntent	when is the town hall open on {Date}
+TownHallHoursIntent what the hours are for town hall
 TownHallHoursIntent	what are hours for town hall
 TownHallHoursIntent	what are the hours for town hall
 TownHallHoursIntent	what are town hall hours
@@ -641,12 +649,16 @@ TrashDayIntent	is my garbage collection this week
 TrashDayIntent	is my trash date this week
 TrashDayIntent	is my recycle date this week
 TrashDayIntent	is my garbage date this week
+TrashDayIntent  is recycling this week
+TrashDayIntent  Do I have recycling this week
+TrashDayIntent  Do I have recycling today
+TrashDayIntent  is today my recycling day
 
 FieldStatusIntent	what is the field status at {park}
 FieldStatusIntent	what is the status of {park}
-FieldStatusIntent	are the fields open at {park}
-FieldStatusIntent	are the fields closed at {park}
-FieldStatusIntent	are the fields shut down at {park}
+FieldStatusIntent	are the fileds open at {park}
+FieldStatusIntent	are the fileds closed at {park}
+FieldStatusIntent	are the fileds shut down at {park}
 FieldStatusIntent	Is {park} open
 FieldStatusIntent	Is {park} closed
 FieldStatusIntent	Is {park} shut down
@@ -657,18 +669,48 @@ FieldStatusIntent	Are games at {park} on for
 FieldStatusIntent	Are games at {park} canceled
 FieldStatusIntent	Are games at {park} postponed
 FieldStatusIntent	Are games at {park} being played
+FieldStatusIntent	Are games at {park} rained out
 FieldStatusIntent	Are games at {park} on for today
 FieldStatusIntent	Are games at {park} canceled today
 FieldStatusIntent	Are games at {park} postponed today
 FieldStatusIntent	Are games at {park} being played today
+FieldStatusIntent	Are games at {park} rained out today
+FieldStatusIntent	if games are on at {park}
 FieldStatusIntent	Are games on at {park}
+FieldStatusIntent	if games are canceled at {park}
 FieldStatusIntent	Are games canceled at {park}
+FieldStatusIntent	if games are postponed at {park}
 FieldStatusIntent	Are games postponed at {park}
+FieldStatusIntent	if games are being played at {park}
 FieldStatusIntent	Are games being played at {park}
+FieldStatusIntent	if games are rained out at {park}
+FieldStatusIntent	Are games rained out at {park}
+FieldStatusIntent	if games are on at {park} today
 FieldStatusIntent	Are games on at {park} today
+FieldStatusIntent	if games are canceled at {park} today
 FieldStatusIntent	Are games canceled at {park} today
+FieldStatusIntent	if games are postponed at {park} today
 FieldStatusIntent	Are games postponed at {park} today
+FieldStatusIntent	if games are being played at {park} today
 FieldStatusIntent	Are games being played at {park} today
+FieldStatusIntent	if games are rained out at {park} today
+FieldStatusIntent	Are games rained out at {park} today
+FieldStatusIntent	check {park} if it is open
+FieldStatusIntent	to check {park} if it is open
+FieldStatusIntent	check {park} if it is closed
+FieldStatusIntent	to check {park} if it is closed
+FieldStatusIntent	check {park} if it is open today
+FieldStatusIntent	to check {park} if it is open today
+FieldStatusIntent	check {park} if it is closed today
+FieldStatusIntent	to check {park} if it is closed today
+FieldStatusIntent	check if {park} is open
+FieldStatusIntent	to check if {park} is open
+FieldStatusIntent	check if {park} is closed
+FieldStatusIntent	to check if {park} is closed
+FieldStatusIntent	check if {park} is open today
+FieldStatusIntent	to check if {park} is open today
+FieldStatusIntent	check if {park} is closed today
+FieldStatusIntent	to check if {park} is closed today
 
 RSSFeedIntent	what is the update
 RSSFeedIntent	what is the latest update
@@ -705,17 +747,31 @@ RSSFeedIntent	to give me my update
 RSSFeedIntent	for my news
 RSSFeedIntent	for my flash briefing
 
+UpcomingCaryEventsIntent	What is happening {Date}
+UpcomingCaryEventsIntent	What is going on {Date}
 UpcomingCaryEventsIntent	What is happening in cary {Date}
 UpcomingCaryEventsIntent	What is going on in cary {Date}
+UpcomingCaryEventsIntent	What is happening on {Date}
+UpcomingCaryEventsIntent	What is going on on {Date}
 UpcomingCaryEventsIntent	What is happening in cary on {Date}
 UpcomingCaryEventsIntent	What is going on in cary on {Date}
+UpcomingCaryEventsIntent	what events are happening {Date}
+UpcomingCaryEventsIntent	what events are there {Date}
 UpcomingCaryEventsIntent	what events are happening in cary {Date}
 UpcomingCaryEventsIntent	what events are there in cary {Date}
+UpcomingCaryEventsIntent	what events are happening on {Date}
+UpcomingCaryEventsIntent	what events are there on {Date}
 UpcomingCaryEventsIntent	what events are happening in cary on {Date}
 UpcomingCaryEventsIntent	what events are there in cary on {Date}
+UpcomingCaryEventsIntent	is there anything fun {Date}
+UpcomingCaryEventsIntent	is there anything interesting {Date}
+UpcomingCaryEventsIntent	is there anything happening {Date}
 UpcomingCaryEventsIntent	is there anything fun in cary {Date}
 UpcomingCaryEventsIntent	is there anything interesting in cary {Date}
 UpcomingCaryEventsIntent	is there anything happening in cary {Date}
+UpcomingCaryEventsIntent	is there anything fun on {Date}
+UpcomingCaryEventsIntent	is there anything interesting on {Date}
+UpcomingCaryEventsIntent	is there anything happening on {Date}
 UpcomingCaryEventsIntent	is there anything fun in cary on {Date}
 UpcomingCaryEventsIntent	is there anything interesting in cary on {Date}
 UpcomingCaryEventsIntent	is there anything happening in cary on {Date}
@@ -741,11 +797,11 @@ to {create|submit|help with} a {|new} {case|service request|request|problem|work
 
 '{when|what day} is my {|next} {trash|recycle|garbage} {day|pickup|collection|date}', 'is my {trash|recycle|garbage} {day|pickup|collection|date} this week'
 
-'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played} {|today}', 'Are games {on|canceled|postponed|being played} at {-|park} {|today}'
+'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played|rained out} {|today}', '{if games are|Are games} {on|canceled|postponed|being played|rained out} at {-|park} {|today}', '{|to} check {-|park} if it is {open|closed} {|today}', '{|to} check if {-|park} is {open|closed} {|today}'
 
 'what is the {|latest} {|town|Cary} {update|news|flash breifing}', 'what is {my|the} flash brefing', '{|to} give me {the|my} {news|flash breifing|update}'
 
-'What is {happening|going on} in cary {|on} {-|Date}', 'what events are {happening|there} in cary {|on} {-|Date}', 'is there anything {fun|interesting|happening} in cary {|on} {-|Date}'
+'What is {happening|going on} {|in cary} {|on} {-|Date}', 'what events are {happening|there} {|in cary} {|on} {-|Date}', 'is there anything {fun|interesting|happening} {|in cary} {|on} {-|Date}'
 
 MyCaseStatusIntent	what is my problem
 MyCaseStatusIntent	what is my case

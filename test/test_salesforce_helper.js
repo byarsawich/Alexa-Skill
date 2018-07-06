@@ -7,13 +7,11 @@ var expect = chai.expect;
 var SalesforceHelper = require('../salesforce_helper');
 require('../salesforce_helper.js');
 chai.config.includeStack = true;
-/*
-setTimeout(function(){
-  var accessToken =  getAccessToken();
 
+/*
 describe('SalesforceHelper', function() {
   var subject = new SalesforceHelper();
-
+  var accessToken = '00D0j0000000PpF!ARIAQGX0_A5hL2.cu1086jTFYwE34Y.GgT4ntP70mmgTB88qH6eJY7QZZC9jSUZgwq2AXpXm14HxiwPX3OcGXE0yJCnjfKTz'
   var address = { x: -78.78019524656116, y: 35.7892128286608 };
   describe('#getUserAddress', function() {
     context('with a user access token', function() {
@@ -70,8 +68,9 @@ describe('SalesforceHelper', function() {
     });
   });
 
-  run();
-});
+
+});*/
+/*
 }, 6000);
 
 function getAccessToken(){

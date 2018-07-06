@@ -8,31 +8,129 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
 //salesforce community login URL
 var INSTANCE_URL = process.env.SALESFORCEURL;
+var SALESFORCE_V = process.env.SALESFORCEVERSION;
 
-function SalesforceHelper() { }
+var CASEISSUEMATCHING = {
+	'PICKUP YARD WASTE': 'Missed Trash',
+	'PICKUP TRASH': 'Missed Trash',
+	'PICKUP GARBAGE': 'Missed Trash',
+	'PICKUP RUBBISH': 'Missed Trash',
+	'PICKUP WASTE': 'Missed Trash',
+	'PICKUP RECYCLING': 'Missed Trash',
+	'PICKUP OIL': 'Oil Collection',
+	'PICKUP CARDBOARD': 'Cardboard Collection',
+	'PICKUP LEAF': 'Leaf Collection',
+	'PICKUP LEAVES': 'Leaf Collection',
 
-SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssue) {
-	var obj = {Subject: 'Alexa Case'};
+	'UPGRADE YARD WASTE': 'Missed Trash',
+	'UPGRADE TRASH': 'Cart Exchange',
+	'UPGRADE GARBAGE': 'Cart Exchange',
+	'UPGRADE RUBBISH': 'Cart Exchange',
+	'UPGRADE WASTE': 'Cart Exchange',
+	'UPGRADE RECYCLING': 'Cart Exchange',
+	'UPGRADE OIL': 'Oil Collection',
+	'UPGRADE CARDBOARD': 'Cardboard Collection',
+	'UPGRADE LEAF': 'Leaf Collection',
+	'UPGRADE LEAVES': 'Leaf Collection',
+
+	'COLLECTION YARD WASTE': 'Missed Trash',
+	'COLLECTION TRASH': 'Missed Trash',
+	'COLLECTION GARBAGE': 'Missed Trash',
+	'COLLECTION RUBBISH': 'Missed Trash',
+	'COLLECTION WASTE': 'Missed Trash',
+	'COLLECTION RECYCLING': 'Missed Trash',
+	'COLLECTION OIL': 'Oil Collection',
+	'COLLECTION CARDBOARD': 'Cardboard Collection',
+	'COLLECTION LEAF': 'Leaf Collection',
+	'COLLECTION LEAVES': 'Leaf Collection',
+
+	'BROKEN YARD WASTE': 'Cart Exchange',
+	'BROKEN TRASH': 'Cart Exchange',
+	'BROKEN GARBAGE': 'Cart Exchange',
+	'BROKEN RUBBISH': 'Cart Exchange',
+	'BROKEN WASTE': 'Cart Exchange',
+	'BROKEN RECYCLING': 'Cart Exchange',
+	'BROKEN OIL': 'Oil Collection',
+	'BROKEN CARDBOARD': 'Cardboard Collection',
+	'BROKEN LEAF': 'Leaf Collection',
+	'BROKEN LEAVES': 'Leaf Collection',
+
+	'MISSED YARD WASTE': 'Missed Trash',
+	'MISSED TRASH': 'Missed Trash',
+	'MISSED GARBAGE': 'Missed Trash',
+	'MISSED RUBBISH': 'Missed Trash',
+	'MISSED WASTE': 'Missed Trash',
+	'MISSED RECYCLING': 'Missed Trash',
+	'MISSED OIL': 'Oil Collection',
+	'MISSED CARDBOARD': 'Cardboard Collection',
+	'MISSED LEAF': 'Leaf Collection',
+	'MISSED LEAVES': 'Leaf Collection',
+
+	'YARD WASTE': 'Missed Trash',
+	'TRASH': 'Missed Trash',
+	'GARBAGE': 'Missed Trash',
+	'RUBBISH': 'Missed Trash',
+	'WASTE': 'Missed Trash',
+	'RECYCLING': 'Missed Trash',
+	'OIL': 'Oil Collection',
+	'CARDBOARD': 'Cardboard Collection',
+	'LEAF': 'Leaf Collection',
+	'LEAVES': 'Leaf Collection'
+}
+
+class salesforceHelper{
+
+	constructor(){}
+
+	get ESRIENDPOINT() {
+    return ESRIDATAENDPOINT;
+  };
+
+	get INSTANCE_URL() {
+    return INSTANCE_URL;
+  };
+
+	get SALESFORCE_V() {
+		return SALESFORCE_V;
+	};
+
+	get CASEISSUEMATCHING() {
+		return CASEISSUEMATCHING;
+	};
+
+
+createCaseInSalesforce(userToken, caseIssue) {
+	var obj = {Subject: caseIssue};
 	obj.Origin = 'Alexa';
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
   return getContactId(userToken).then(function(results){
+			console.log('got contactId: ' + results);
       obj.ContactId = results
-      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssue + "%'");
+      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + CASEISSUEMATCHING[caseIssue.toUpperCase()] + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
-		obj.CaseIssue__c = caseIssueRecord.Id;
-		return conn.query("Select Id from RecordType where Name = 'public works case'");
+		console.log('caseIssueRecord: ' + caseIssueRecord);
+		console.log(results);
+		if(caseIssueRecord === null || caseIssueRecord === undefined){
+			return undefined;
+		} else {
+			obj.CaseIssue__c = caseIssueRecord.Id;
+			return conn.query("Select Id from RecordType where Name = 'public works case'");
+		}
 	}).then(function(results) {
     var recordType = results.records[0];
     obj.RecordTypeId = recordType.Id;
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
-    return conn.query("Select Id, CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
+		console.log(results);
+		console.log("Select Id, CaseNumber, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
+    return conn.query("Select Id, CaseNumber, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
+		console.log(results);
     return results.records[0];
   }).catch(function(err) {
     console.log('Error in case creation');
@@ -40,22 +138,24 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
   });
 };
 
-SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue) {
+findLatestCaseStatus(userToken, caseIssue) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
 	return getContactId(userToken).then(function(results){
 		var q = '';
 		if(caseIssue == undefined){
 			q = "ContactId = '" + results + "'";
 		} else {
-			q = "ContactId = '" + results + "' AND CaseIssue__r.Name LIKE '%" + caseIssue + "%'";
+			q = "ContactId = '" + results + "' AND Case_Issue_Name__c LIKE '%" + caseIssue + "%'";
 		}
 		console.log(q);
-		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where " +  q + " order by createdDate DESC Limit 1");
+		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, Case_Issue_Name__c from Case where " +  q + " order by createdDate DESC Limit 1");
 	}).then(function(results){
+			console.log(results);
+			console.log(results.records);
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -63,13 +163,13 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
   });
 };
 
-SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
+findCaseStatus(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'39.0'
+		version: SALESFORCE_V
 	});
-	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
+	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, Case_Issue_Name__c from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -77,7 +177,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
   });
 };
 
-SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
+formatExistingCase(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
@@ -89,7 +189,7 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 		});
 		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber}'); //  an expected completion date of ${finishDate}
 		response.card = card({
-			caseIssue: caseInfo[0].CaseIssue__r.Name,
+			caseIssue: caseInfo[0].Case_Issue_Name__c,
 			caseNumber: caseInfo[0].CaseNumber,
 			finishDate: helperClass.formatDateTime(Date.parse(caseInfo[0].Expected_Completion_Date__c))
 		});
@@ -100,35 +200,38 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	return response;
 };
 
-SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
+formatNewCaseStatus(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
   var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case on your Alexa App.');
 	response.prompt = prompt({
-		caseIssue: caseInfo.CaseIssue__r.Name,
+		caseIssue: caseInfo.Case_Issue_Name__c,
 		caseNumber: caseInfo.CaseNumber
 	});
 	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber}'); // an expected completion date of ${finishDate}
 	response.card = card({
-		caseIssue: caseInfo.CaseIssue__r.Name,
+		caseIssue: caseInfo.Case_Issue_Name__c,
 		caseNumber: caseInfo.CaseNumber,
 		finishDate: helperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
 	});
 	return response;
 };
 
-SalesforceHelper.prototype.getUserAddress = function(userToken) {
+getUserAddress(userToken) {
 	console.log(INSTANCE_URL);
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
-		accessToken : userToken
+		accessToken : userToken,
+		version: SALESFORCE_V
 	});
 	return getContactId(userToken).then(function(results){
 		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results +"'" );
 	}).then(function(results){
+		console.log(results);
 		if(results.records[0].MailingLatitude == null || results.records[0].MailingLongitude == null){
 			var esriDataHelper = new EsriDataHelper();
 			return esriDataHelper.requestAddressInformation(results.records[0].MailingStreet).then(function(response) {
+				console.log(response);
 				return {"x": response.candidates[0].location.x, "y": response.candidates[0].location.y};
 			}).catch(function(err){
 				console.log('Error in geocoding address');
@@ -143,11 +246,11 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 	});
 };
 
-SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
+getTownHallHours(userToken, date) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version: '39.0'
+		version: SALESFORCE_V
 	});
 
 	return conn.query('Select ActivityDate from Holiday').then(function(response) {
@@ -167,7 +270,7 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 	});
 };
 
-SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
+formatTownHallHours(timeInfo, date) {
 	var prompt = '';
 	var helperClass = new HelperClass();
 	if(timeInfo.closed){
@@ -184,7 +287,7 @@ SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
 	return prompt;
 };
 
-function getContactId(userToken){
+getContactId(userToken){
   var options = {
     //uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
 		uri: INSTANCE_URL + '/services/apexrest/CommunityContact/',
@@ -198,5 +301,5 @@ function getContactId(userToken){
   };
   return rp(options);
 }
-
+}
 module.exports = SalesforceHelper;

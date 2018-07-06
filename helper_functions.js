@@ -2,18 +2,77 @@
 var promise = require('bluebird');
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
-var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
-var LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
-var CASESUBJECTPAIRINGS = {'yard waste': 'collection', 'oil': 'collection', 'cardboard': 'collection', 'leaf': 'collection', 'trash': 'missed', 'recycling': 'missed'};
+var CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
+const FIELDNAMEPAIRINGS = {
+'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK',
+'MILLS PARK MIDDLE': 'MILLS PARK',
+'MILLS PARK': 'MILLS PARK',
+'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK',
+'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK',
+'MIDDLE CREEK': 'MIDDLE CREEK',
+'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG',
+'HERBERT C. YOUNG': 'HERBERT YOUNG',
+'HERB YOUNG': 'HERBERT YOUNG',
+'HERBERT YOUNG COMMUNITY CENTER': 'HERBERT YOUNG',
+'HERBERT YOUNG': 'HERBERT YOUNG',
+'BOND PARK COMMUNITY CENTER': 'BOND PARK',
+'BOND PARK': 'BOND PARK',
+'CARY HIGH SCHOOL': 'CARY HIGH',
+'CARY HIGH': 'CARY HIGH',
+'DAVIS DRIVE MIDDLE SCHOOL': 'DAVIS DRIVE',
+'DAVIS DRIVE MIDDLE': 'DAVIS DRIVE',
+'DAVIS DRIVE': 'DAVIS DRIVE',
+'GREEN HOPE ELEMENTARY SCHOOL': 'GREEN HOPE ELEMENTARY',
+'GREEN HOPE ELEMENTARY': 'GREEN HOPE ELEMENTARY',
+'GREEN HOPE HIGH SCHOOL': 'GREEN HOPE HIGH',
+'GREEN HOPE HIGH': 'GREEN HOPE HIGH',
+'GREEN HOPE': 'GREEN HOPE HIGH',
+'LEXIE LANE PARK': 'LEXIE LANE',
+'LEXIE LANE': 'LEXIE LANE',
+'USA BASEBALL NATIONAL TRAINING COMPLEX': 'USA BASEBALL',
+'USA BASEBALL COMPLEX': 'USA BASEBALL',
+'USA BASEBALL': 'USA BASEBALL',
+'WAKEMED': 'WAKEMED SOCCER',
+'WAKEMED SOCCER': 'WAKEMED SOCCER',
+'WAKEMED SOCCER PARK': 'WAKEMED SOCCER',
+'CARY ELEMENTARY SCHOOL': 'CARY ELEMENTARY',
+'CARY ELEMENTARY': 'CARY ELEMENTARY',
+'PANTHER CREEK HIGH SCHOOL': 'PANTHER CREEK',
+'PANTHER CREEK HIGH': 'PANTHER CREEK',
+'PANTHER CREEK': 'PANTHER CREEK',
+'REEDY CREEK MIDDLE SCHOOL': 'REEDY CREEK',
+'REEDY CREEK MIDDLE': 'REEDY CREEK',
+'REEDY CREEK': 'REEDY CREEK',
+'WEST CARY MIDDLE SCHOOL': 'WEST CARY',
+'WEST CARY MIDDLE': 'WEST CARY',
+'WEST CARY': 'WEST CARY',
+'EAST CARY MIDDLE SCHOOL': 'EAST CARY',
+'EAST CARY MIDDLE': 'EAST CARY',
+'EAST CARY': 'EAST CARY',
+'THOMAS BROOKS PARK': 'THOMAS BROOKS',
+'THOMAS BROOKS': 'THOMAS BROOKS',
+'ANNIE JONES PARK': 'ANNIE JONES',
+'ANNIE JONES': 'ANNIE JONES',
+'LIONS PARK': 'LIONS PARK',
+'RITTER PARK': 'RITTER PARK',
+'CARY ARTS CENTER': 'CARY ARTS CENTER',
+'CARY ARTS': 'CARY ARTS CENTER'};
 
-function HelperClass() { }
+class HelperClass{
 
-HelperClass.prototype.FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'HERBERT C. YOUNG': 'HERBERT YOUNG', 'HERB YOUNG': 'HERBERT YOUNG', 'HERBERT YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK', 'CARY HIGH SCHOOL': 'CARY HIGH', 'DAVIS DRIVE MIDDLE SCHOOL': 'DAVIS DRIVE', 'GREEN HOPE HIGH SCHOOL': 'GREEN HOPE HIGH', 'GREEN HOPE ELEMENTARY SCHOOL': 'GREEN HOPE ELEMENTARY', 'LEXIE LANE PARK': 'LEXIE LANE', 'USA BASEBALL NATIONAL TRAINING COMPLEX': 'USA BASEBALL', 'WAKEMED': 'WAKEMED SOCCER', 'WAKEMED SOCCER PARK': 'WAKEMED SOCCER', 'CARY ELEMENTARY SCHOOL': 'CARY ELEMENTARY', 'PANTHER CREEK HIGH SCHOOL': 'PANTHER CREEK', 'PANTHER CREEK HIGH': 'PANTHER CREEK', 'REEDY CREEK MIDDLE SCHOOL': 'REEDY CREEK', 'REEDY CREEK MIDDLE': 'REEDY CREEK', 'WEST CARY MIDDLE SCHOOL': 'WEST CARY', 'WEST CARY MIDDLE': 'WEST CARY', 'WAKEMED': 'WAKEMED', 'BOND PARK': 'BOND PARK', 'CARY ELEMENTARY': 'CARY ELEMENTARY', 'CARY HIGH': 'CARY HIGH', 'DAVIS DRIVE': 'DAVIS DRIVE', 'EAST CARY': 'EAST CARY', 'GREEN HOPE ELEMENTARY': 'GREEN HOPE ELEMENTARY', 'GREEN HOPE HIGH': 'GREEN HOPE HIGH', 'HERBERT C. YOUNG': 'HERBERT C. YOUNG', 'HERBERT YOUNG': 'HERBERT YOUNG', 'MIDDLE CREEK': 'MIDDLE CREEK', 'PANTHER CREEK': 'PANTHER CREEK', 'REEDY CREEK': 'REEDY CREEK', 'WEST CARY': 'WEST CARY', 'MILLS PARK': 'MILLS PARK', 'THOMAS BROOKS PARK': 'THOMAS BROOKS PARK', 'ANNIE JONES PARK': 'ANNIE JONES PARK', 'LEXIE LANE PARK': 'LEXIE LANE PARK', 'LIONS PARK': 'LIONS PARK', 'RITTER PARK': 'RITTER PARK', 'USA BASEBALL': 'USA BASEBALL', 'CARY ARTS CENTER': 'CARY ARTS CENTER'};
+  constructor(){ }
 
-HelperClass.prototype.EVENTLOCATIONS = {};
+
+get FIELDNAMEPAIRINGS() {
+  return FIELDNAMEPAIRINGS;
+};
+
+get EVENTLOCATIONS() {
+  return EVENTLOCATIONS;
+};
 
 //date formating functions to make a response sound better for alexa
-HelperClass.prototype.formatDate = function (date) {
+formatDate(date) {
   var i = date.toString().search(/20\d{2}/);
   if (i > 0) {
     return date.toString().slice(0, i).trim();
@@ -21,14 +80,14 @@ HelperClass.prototype.formatDate = function (date) {
   return date;
 };
 
-HelperClass.prototype.formatDateTime = function (dateTime) {
+formatDateTime(dateTime) {
   if (dateTime !== null && dateTime !== undefined){
     return this.formatDate(dateTime) + ' at ' +  this.formatTimeString(dateTime);
   }
   return null;
 };
 
-HelperClass.prototype.formatTimeString = function (date) {
+formatTimeString(date) {
   if ((typeof(date) !== 'object') || (date.constructor !== Date)) {
     throw new Error('argument must be a Date object');
   }
@@ -39,12 +98,12 @@ HelperClass.prototype.formatTimeString = function (date) {
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
 };
 
-HelperClass.prototype.formatAddress = function (fullAddress) {
+formatAddress(fullAddress) {
   var sliceIndex = fullAddress.toUpperCase().search('CARY') || fullAddress.toUpperCase().search('APEX') || fullAddress.toUpperCase().search('MORRISVILLE');
 	return fullAddress.slice(0, sliceIndex - 1).trim();
 };
 
-HelperClass.prototype.getRecycleDay = function (cycle, trashDay) {
+getRecycleDay(cycle, trashDay) {
   var diff;
   if (cycle == 'BLUE') {
     diff = Date.DateDiff('d', RECYCLEBLUESTART, Date.today()) % 14;
@@ -60,7 +119,7 @@ HelperClass.prototype.getRecycleDay = function (cycle, trashDay) {
   }
 };
 
-HelperClass.prototype.getCircleCoords = function (x,y,d) {
+getCircleCoords(x,y,d) {
   var tao = 2 * Math.PI;
   var results = [];
   var pointsInCircle = 8
@@ -75,26 +134,21 @@ HelperClass.prototype.getCircleCoords = function (x,y,d) {
   return results;
 };
 
-HelperClass.prototype.addLeadZeros =  function (caseNumber, caseNumberLength) {
+addLeadZeros(caseNumber, caseNumberLength) {
   var filler = '0';
   var results = filler.repeat(caseNumberLength - caseNumber.length).concat(caseNumber);
   return results.valueOf();
 };
 
-HelperClass.prototype.formatCaseSubject = function(caseSubject){
-  var tempSubject = TRASHCASES[caseSubject] || LEAFCASES[caseSubject];
-  if (tempSubject === undefined) {
-    return caseSubject;
+addCaseAction(caseSubject){
+  if(caseSubject !== undefined){
+    return CASESUBJECTPAIRINGS[caseSubject.toUpperCase()];
   } else {
-    return tempSubject;
+    return caseSubject;
   }
 };
 
-HelperClass.prototype.addCaseAction = function (caseSubject){
-  return CASESUBJECTPAIRINGS[caseSubject];
-};
-
-HelperClass.prototype.addFieldResults = promise.method(function (body, results) {
+addFieldResults(body, results) {
   var lines = body.toString().split("\n");
   for (var i = 1; i < lines.length; i++) {
     var fieldInfo = lines[i].split("\t");
@@ -112,10 +166,10 @@ HelperClass.prototype.addFieldResults = promise.method(function (body, results) 
     }
   }
   return results;
-});
+};
 
 //next two functions are from Amazon's calendar reader on github used to parse the Amazon.Date slot type.
-HelperClass.prototype.getWeekendData = function (res) {
+getWeekendData(res) {
     if (res.length === 3) {
         var saturdayIndex = 5;
         var sundayIndex = 6;
@@ -131,11 +185,11 @@ HelperClass.prototype.getWeekendData = function (res) {
     }
 }
 
-HelperClass.prototype.getPrepostion = function(len) {
+getPrepostion(len) {
   return len > 1 ? 'are' : 'is';
 }
 
-var w2date = function (year, wn, dayNb) {
+w2date(year, wn, dayNb) {
     var day = 86400000;
 
     var j10 = new Date(year, 0, 10, 12, 0, 0),
@@ -144,5 +198,5 @@ var w2date = function (year, wn, dayNb) {
     return new Date(mon1 + ((wn - 1) * 7 + dayNb) * day);
 };
 
-
+}
 module.exports = HelperClass;

@@ -8,16 +8,27 @@ require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
 var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
 
-function FieldStatusHelper() { }
+class FieldStatusHelper{
 
-FieldStatusHelper.prototype.getAllFieldStatus = function(){
+  constructor(){}
+
+  get FIELDSTATUSENDPOINT() {
+    return FIELDSTATUSENDPOINT;
+  };
+
+  get FIELDTYPES() {
+    return FIELDTYPES;
+  };
+
+
+getAllFieldStatus(){
   var results = {};
   return this.promiseLoop(results, 0).then(function(response){
     return response
   });
 }
 
-FieldStatusHelper.prototype.requestFieldStatus = function(uri){
+requestFieldStatus(uri){
   var options = {
     method: 'GET',
     uri: encodeURI(uri),
@@ -27,7 +38,7 @@ FieldStatusHelper.prototype.requestFieldStatus = function(uri){
   return rp(options);
 }
 
-FieldStatusHelper.prototype.promiseLoop = function(results, i){
+promiseLoop(results, i){
   var helperClass = new HelperClass();
   var self = this;
   return this.requestFieldStatus(FIELDSTATUSENDPOINT + FIELDTYPES[i]).then(function(response){
@@ -40,7 +51,7 @@ FieldStatusHelper.prototype.promiseLoop = function(results, i){
   });
 }
 
-FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery){
+formatFieldStatus(fieldStatus, parkQuery){
   var prompt;
   var helperClass = new HelperClass();
   var parkName = helperClass.FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
@@ -67,5 +78,5 @@ FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery)
 var counter = promise.method(function(i){
     return i + 1;
 });
-
+}
 module.exports = FieldStatusHelper;

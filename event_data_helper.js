@@ -7,9 +7,12 @@ require('./jsDate.js')();
 require('datejs');
 var HelperClass = require('./helper_functions.js');
 
-function EventDataHelper() { }
+class EventDataHelper {
 // line 254 index
-EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
+
+  constructor(){}
+
+requestEventData(uri, startDate, endDate) {
   var self = this;
   var helperClass = new HelperClass();
   return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
@@ -18,6 +21,8 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
     //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
     // });
     // return json;
+    console.log(response);
+    console.log(json);
     return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');
@@ -25,7 +30,7 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
   });
 };
 
-EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
+calendarEventFind(uri, startDate, endDate){
   var options = { method: 'POST',
     url: uri,
     form: {
@@ -39,7 +44,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
       EndDate: endDate,
       Filter: null,
       PageIndex: '1',
-      PageSize: '8',
+      PageSize: '6',
       StartDate: startDate
    }
   };
@@ -48,7 +53,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
   return rp(options);
 }
 
-EventDataHelper.prototype.calendarEventGet = function(uri, id){
+calendarEventGet(uri, id){
   var options = { method: 'POST',
     url: uri,
     form: {
@@ -66,7 +71,7 @@ EventDataHelper.prototype.calendarEventGet = function(uri, id){
   return rp(options);
 }
 
-function signAPIRequest(params){
+signAPIRequest(params) {
   var returnVal = process.env.VISIONAPPSECRET;
   Object.keys(params).forEach(function(key) {
     if(params[key] !== null){
@@ -74,10 +79,10 @@ function signAPIRequest(params){
     }
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
-}
+
 
 // promise loop to move to insert location into alexa return
-EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
+promiseWhile(uri, results, i) {
   var self = this;
   return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
     var json = JSON.parse(response);
@@ -92,7 +97,7 @@ EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   });
 }
 
-EventDataHelper.prototype.formatEventData = function(sampleReturn) {
+formatEventData(sampleReturn) {
   var helperClass = new HelperClass();
   var eventCount = sampleReturn.PagingList.Content.length
   var eventData =[];
@@ -103,16 +108,21 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
     return 'There are no scheduled events for that day';
   } else {
     eventContent.forEach(function(item) {
-      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} at ${eventLocation}. ')({
+      console.log(item);
+      var location = (item.Location === null || item.Location === undefined) ? ' ' : 'at ' + item.Location;
+      console.log(location);
+      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} ${eventLocation}. ')({
         eventStart: helperClass.formatTimeString(Date.parse(item.StartDate)),
         eventEnd: helperClass.formatTimeString(Date.parse(item.EndDate)),
         eventTitle: item.Title,
-        eventLocation: item.Location
+        eventLocation: location
       });
     });
-    response = _.template('On ${date} there are ${count} events: ${eventData}')({
+    response = _.template('On ${date} there ${prep} ${count} event${s}: ${eventData}')({
       date: helperClass.formatDate(Date.parse(eventContent[0].StartDate)),
+      prep:  helperClass.getPrepostion(eventCount),
       count: eventCount,
+      s: eventCount >= 2 ? 's' : '',
       eventData: eventData
     });
 
@@ -123,6 +133,8 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
 var counter = Promise.method(function(i){
     return i + 1;
 });
+
+}
 
 module.exports = EventDataHelper;
 

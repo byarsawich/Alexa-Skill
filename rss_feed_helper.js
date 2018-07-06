@@ -4,18 +4,22 @@ var rp = require('request-promise');
 require('./jsDate.js')();
 require('datejs');
 const feedparser = require('feedparser-promised');
-const url = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&&cateIDs=64';
+const url = 'https://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=64';
 
-function RSSFeedHelper() { }
+class RSSFeedHelper{
 
-function dateFilter(value) {
+  constructor(){}
+
+dateFilter(value) {
   var yesterday = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
   return value.date >= yesterday;
 }
 
-RSSFeedHelper.prototype.requestRSSFeed = function() {
+requestRSSFeed() {
   var feedData = [];
-  return feedparser.parse(encodeURI(url)).then( (items) => {
+  console.log(url);
+  return feedparser.parse(url).then( (items) => {
+    console.log(items);
     feedData = items.filter(dateFilter);
 
     if(feedData[0] == undefined) {
@@ -28,7 +32,7 @@ RSSFeedHelper.prototype.requestRSSFeed = function() {
   });
 };
 
-RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
+formatRSSFeed(feedData) {
   var response = 'The latest Town of Cary News today: ';
   if (feedData[0].title == 'Town of Cary\'s Weekend Update' && feedData[1] == undefined) {
     response = 'Please check Town of Cary dot O R G for the Weekend update';
@@ -41,5 +45,5 @@ RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
   }
   return response = response.replace('Town of Cary\'s Weekend Update', 'Please check Town of Cary dot O R G for the Weekend update');
 };
-
+}
 module.exports = RSSFeedHelper;

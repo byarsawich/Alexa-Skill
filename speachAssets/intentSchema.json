@@ -79,38 +79,8 @@
       	"slots": []
     },
     {
-    	"intent": "NearbyPublicArtIntent",
-      	"slots": []
-    },
-    {
       "intent": "CaseStartIntent",
       "slots": []
-    },
-    {
-      "intent": "MyCaseStatusIntent",
-      "slots": [
-        {
-          "name": "caseSubject",
-          "type": "CASE_SUBJECT"
-        },
-        {
-          "name": "caseAction",
-          "type": "CASE_ACTION"
-        }
-      ]
-    },
-    {
-      "intent": "GetCouncilInfoIntent",
-      "slots": []
-    },
-    {
-      "intent": "CaseStatusIntent",
-      "slots": [
-        {
-          "name": "CaseNumber",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
     },
     {
      "intent": "CaseConfirmationIntent",
@@ -144,24 +114,6 @@
     },
     {
       "intent": "UpcomingCaryEventsIntent",
-      "slots":[
-        {
-          "name": "Date",
-          "type": "AMAZON.Date"
-        }
-      ]
-    },
-    {
-      "intent": "UpcomingTheCaryShowsIntent",
-      "slots":[
-        {
-          "name": "Date",
-          "type": "AMAZON.Date"
-        }
-      ]
-    },
-    {
-      "intent": "KokoBoothIntent",
       "slots":[
         {
           "name": "Date",

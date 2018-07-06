@@ -7,9 +7,12 @@ require('./jsDate.js')();
 require('datejs');
 var HelperClass = require('./helper_functions.js');
 
-function EventDataHelper() { }
+class EventDataHelper {
 // line 254 index
-EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
+
+  constructor(){}
+
+requestEventData(uri, startDate, endDate) {
   var self = this;
   var helperClass = new HelperClass();
   return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
@@ -27,7 +30,7 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
   });
 };
 
-EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
+calendarEventFind(uri, startDate, endDate){
   var options = { method: 'POST',
     url: uri,
     form: {
@@ -50,7 +53,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
   return rp(options);
 }
 
-EventDataHelper.prototype.calendarEventGet = function(uri, id){
+calendarEventGet(uri, id){
   var options = { method: 'POST',
     url: uri,
     form: {
@@ -68,7 +71,7 @@ EventDataHelper.prototype.calendarEventGet = function(uri, id){
   return rp(options);
 }
 
-function signAPIRequest(params){
+signAPIRequest(params) {
   var returnVal = process.env.VISIONAPPSECRET;
   Object.keys(params).forEach(function(key) {
     if(params[key] !== null){
@@ -76,10 +79,10 @@ function signAPIRequest(params){
     }
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
-}
+
 
 // promise loop to move to insert location into alexa return
-EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
+promiseWhile(uri, results, i) {
   var self = this;
   return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
     var json = JSON.parse(response);
@@ -94,7 +97,7 @@ EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   });
 }
 
-EventDataHelper.prototype.formatEventData = function(sampleReturn) {
+formatEventData(sampleReturn) {
   var helperClass = new HelperClass();
   var eventCount = sampleReturn.PagingList.Content.length
   var eventData =[];
@@ -130,6 +133,8 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
 var counter = Promise.method(function(i){
     return i + 1;
 });
+
+}
 
 module.exports = EventDataHelper;
 

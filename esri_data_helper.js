@@ -17,9 +17,39 @@ var DAYS = {
   THU: 'Thursday',
   FRI: 'Friday'
 }
-function EsriDataHelper() { }
 
-EsriDataHelper.prototype.requestAddressInformation = function(address) {
+class EsriDataHelper {
+
+  constructor(){ }
+
+  get EVENTDATAENDPOINT() {
+    return EVENTDATAENDPOINT;
+  };
+
+  get ESRIENDPOINT() {
+    return ESRIENDPOINT;
+  };
+
+
+  get EARTHRADIUS() {
+    return EARTHRADIUS;
+  };
+
+
+  get RECYCLEYELLOWSTART() {
+    return RECYCLEYELLOWSTART;
+  };
+
+
+  get RECYCLEBLUESTART() {
+    return RECYCLEBLUESTART;
+  };
+
+  get DAYS() {
+    return DAYS;
+  };
+
+requestAddressInformation(address) {
   var self = this;
   return this.getAddressGeolocation(address).then(
     function(response) {
@@ -30,7 +60,7 @@ EsriDataHelper.prototype.requestAddressInformation = function(address) {
   ).catch(console.log.bind(console));
 }
 
-EsriDataHelper.prototype.getAddressGeolocation = function(address) {
+getAddressGeolocation(address) {
   var uri = ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '&City=&State=&ZIP=&SingleLine=&outFields=*&maxLocations=&outSR=4326&searchExtent=&f=pjson';
   console.log(uri);
   var options = {
@@ -43,7 +73,7 @@ EsriDataHelper.prototype.getAddressGeolocation = function(address) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.requestESRIInformation = function(uri) {
+requestESRIInformation(uri) {
   return this.getESRIInformation(uri).then(
     function(response) {
       return response.body;
@@ -53,7 +83,7 @@ EsriDataHelper.prototype.requestESRIInformation = function(uri) {
   ).catch(console.log.bind(console));
 };
 
-EsriDataHelper.prototype.getESRIInformation = function(uri) {
+getESRIInformation(uri) {
   var options = {
     method: 'GET',
     uri: encodeURI(uri),
@@ -64,7 +94,7 @@ EsriDataHelper.prototype.getESRIInformation = function(uri) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance, uri) {
+requestInformationByRadius(x, y, distance, uri) {
   return this.getInformationByRadius(x, y, distance, uri).then(
     function(response) {
       return response.body;
@@ -74,7 +104,7 @@ EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance, u
   ).catch(console.log.bind(console));
 };
 
-EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance, uri) {
+getInformationByRadius(x, y, distance, uri) {
   //radius of earth is 3959 miles
   var helperClass = new HelperClass();
   var radius = distance / EARTHRADUIS;
@@ -90,7 +120,7 @@ EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance, uri) 
   return rp(options);
 };
 
-EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
+formatMyCouncilMember(councilInfo) {
   var prompt = '';
   councilInfo.results.forEach(function(item){
     if (typeof item.attributes["Council Distict"] != 'undefined'){
@@ -106,7 +136,7 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
   return prompt;
 };
 
-EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
+formatNearbyParks(parkInfo) {
   var helperClass = new HelperClass();
   var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
   parkInfo.features.forEach(function(item){
@@ -118,7 +148,7 @@ EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
   return prompt;
 };
 
-EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
+formatNearbyPublicArt(artInfo) {
   var helperClass = new HelperClass();
   var prompt = '';
   var numArt = artInfo.features.length;
@@ -138,7 +168,7 @@ EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
   return prompt;
 };
 
-EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
+formatMyTrashDay(trashInfo) {
   var helperClass = new HelperClass();
   var trashDay =  DAYS[trashInfo.features[0].attributes.Day.toUpperCase()];
   var cycle = trashInfo.features[0].attributes.Cycle.toUpperCase();
@@ -167,7 +197,7 @@ EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
   return prompt;
 };
 
-EsriDataHelper.prototype.checkTrashDays = function (NextDays) {
+checkTrashDays(NextDays) {
   var uri = EVENTDATAENDPOINT;
   var helperClass = new HelperClass();
   console.log(NextDays);
@@ -222,5 +252,6 @@ EsriDataHelper.prototype.checkTrashDays = function (NextDays) {
     return NextDays;
   }
 };
+}
 
 module.exports = EsriDataHelper;

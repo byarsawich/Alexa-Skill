@@ -3,9 +3,11 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var HelperClass = require('./helper_functions.js');
 
-function OpenDataHelper() { }
+ class OpenDataHelper{
 
-OpenDataHelper.prototype.requestOpenData = function(uri) {
+   constructor(){}
+
+requestOpenData(uri) {
   return this.getOpenData(uri).then(function(response) {
     return response.body;
   }).catch(function (error) {
@@ -14,7 +16,7 @@ OpenDataHelper.prototype.requestOpenData = function(uri) {
   });
 };
 
-OpenDataHelper.prototype.getOpenData = function(uri) {
+getOpenData(uri) {
   var options = {
     method: 'GET',
     uri: encodeURI(uri),
@@ -25,7 +27,7 @@ OpenDataHelper.prototype.getOpenData = function(uri) {
   return rp(options);
 };
 
-OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
+formatGymTimes(gymTimes) {
   var times = '';
   var helperClass = new HelperClass();
   var sortedGyms = {}
@@ -69,7 +71,7 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   }
 };
 
-OpenDataHelper.prototype.formatStudioTimes = function(studioTimes) {
+formatStudioTimes(studioTimes) {
   var times = '';
   var helperClass = new HelperClass();
   studioTimes.records.forEach(function(item, index){
@@ -97,7 +99,7 @@ OpenDataHelper.prototype.formatStudioTimes = function(studioTimes) {
   }
 };
 
-OpenDataHelper.prototype.formatNextStudioTime = function(studioTimes) {
+formatNextStudioTime(studioTimes) {
   var times = '';
   var helperClass = new HelperClass();
   var response = '';
@@ -116,7 +118,7 @@ OpenDataHelper.prototype.formatNextStudioTime = function(studioTimes) {
   return response;
 };
 
-OpenDataHelper.prototype.formatMayor = function(cityInfo) {
+formatMayor(cityInfo) {
   var response = '';
   cityInfo.records.forEach(function(item){
     response = _.template('The mayor of Cary is ${mayor}.')({
@@ -130,7 +132,7 @@ OpenDataHelper.prototype.formatMayor = function(cityInfo) {
   }
 };
 
-OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
+formatAllCouncilMembers(cityInfo) {
   var response = '';
   var mayor = '';
   cityInfo.records.forEach(function(item){
@@ -160,7 +162,7 @@ OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   }
 };
 
-OpenDataHelper.prototype.formatAtLargeCouncilMembers = function(cityInfo) {
+formatAtLargeCouncilMembers(cityInfo) {
   var response = '';
   var atLarge = [];
   cityInfo.facet_groups[0].facets.forEach(function(item){
@@ -181,6 +183,6 @@ OpenDataHelper.prototype.formatAtLargeCouncilMembers = function(cityInfo) {
     return response;
   }
 };
-
+}
 
 module.exports = OpenDataHelper;

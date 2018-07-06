@@ -78,9 +78,28 @@ var CASEISSUEMATCHING = {
 	'LEAVES': 'Leaf Collection'
 }
 
-function SalesforceHelper() { }
+class salesforceHelper{
 
-SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssue) {
+	constructor(){}
+
+	get ESRIENDPOINT() {
+    return ESRIDATAENDPOINT;
+  };
+
+	get INSTANCE_URL() {
+    return INSTANCE_URL;
+  };
+
+	get SALESFORCE_V() {
+		return SALESFORCE_V;
+	};
+
+	get CASEISSUEMATCHING() {
+		return CASEISSUEMATCHING;
+	};
+
+
+createCaseInSalesforce(userToken, caseIssue) {
 	var obj = {Subject: caseIssue};
 	obj.Origin = 'Alexa';
 	var conn = new jsforce.Connection({
@@ -119,7 +138,7 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
   });
 };
 
-SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue) {
+findLatestCaseStatus(userToken, caseIssue) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
@@ -144,7 +163,7 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
   });
 };
 
-SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
+findCaseStatus(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
@@ -158,7 +177,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
   });
 };
 
-SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
+formatExistingCase(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
@@ -181,7 +200,7 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	return response;
 };
 
-SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
+formatNewCaseStatus(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
   var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case on your Alexa App.');
@@ -198,7 +217,7 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	return response;
 };
 
-SalesforceHelper.prototype.getUserAddress = function(userToken) {
+getUserAddress(userToken) {
 	console.log(INSTANCE_URL);
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
@@ -227,7 +246,7 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 	});
 };
 
-SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
+getTownHallHours(userToken, date) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
@@ -251,7 +270,7 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 	});
 };
 
-SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
+formatTownHallHours(timeInfo, date) {
 	var prompt = '';
 	var helperClass = new HelperClass();
 	if(timeInfo.closed){
@@ -268,7 +287,7 @@ SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
 	return prompt;
 };
 
-function getContactId(userToken){
+getContactId(userToken){
   var options = {
     //uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
 		uri: INSTANCE_URL + '/services/apexrest/CommunityContact/',
@@ -282,5 +301,5 @@ function getContactId(userToken){
   };
   return rp(options);
 }
-
+}
 module.exports = SalesforceHelper;
